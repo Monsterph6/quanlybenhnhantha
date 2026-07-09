@@ -4,7 +4,7 @@
 
 $ErrorActionPreference = "Stop"
 
-$GITHUB_OWNER = "phamhieu111089"
+$GITHUB_OWNER = "Monsterph6"
 $GITHUB_REPO  = "quanlybenhnhantha"
 
 $root        = $PSScriptRoot

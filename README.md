@@ -146,7 +146,7 @@ từng tổ hợp tiêu chí), để tab "Lọc trùng" không hiển thị lạ
 
 ## Đóng gói & Triển khai sang máy khác
 
-Repo GitHub (private): **https://github.com/phamhieu111089/quanlybenhnhantha**
+Repo GitHub (private): **https://github.com/Monsterph6/quanlybenhnhantha**
 
 Có 2 vai trò:
 - **Người phát triển (bạn)**: sửa code, build, đẩy bản cập nhật lên GitHub Releases.
@@ -160,7 +160,7 @@ git init
 git add .
 git commit -m "Khoi tao du an"
 git branch -M main
-git remote add origin https://github.com/phamhieu111089/quanlybenhnhantha.git
+git remote add origin https://github.com/Monsterph6/quanlybenhnhantha.git
 git push -u origin main
 ```
 File `.gitignore` đã loại trừ sẵn dữ liệu bệnh nhân (`*.xlsx`, `*.db`, các file
