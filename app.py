@@ -15,11 +15,15 @@ from core import (
     get_conn, init_db, record_count, import_excel,
     write_export, export_query_to_file,
     count_swapped_gender_birthdate, fix_swapped_gender_birthdate,
+    count_unparsed_kham_dates, fix_unparsed_kham_dates,
     build_dedup_key, scan_dedup_groups, group_detail_rows,
     delete_patients_by_ids,
     merge_specific_ids, merge_group, merge_all_groups,
     unique_rows_with_optional_history,
     add_dedup_exception, remove_dedup_exception, list_dedup_exceptions,
+    backup_database, data_quality_summary, data_quality_rows_sql,
+    has_password, set_password, verify_password, remove_password,
+    get_local_version, check_latest_release,
 )
 
 QT_EXPORT_FILTER = "Excel (*.xlsx);;CSV (*.csv)"
@@ -169,6 +173,146 @@ class ImportWorker(QtCore.QThread):
             self.failed.emit(str(e))
 
 
+class LoginDialog(QtWidgets.QDialog):
+    """Man hinh dang nhap khi khoi dong app, chi hien neu da dat mat khau."""
+    MAX_ATTEMPTS = 5
+
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Đăng nhập")
+        self.setModal(True)
+        self.attempts = 0
+
+        layout = QtWidgets.QVBoxLayout(self)
+        layout.addWidget(QtWidgets.QLabel("Nhập mật khẩu để mở ứng dụng:"))
+        self.pw_edit = QtWidgets.QLineEdit()
+        self.pw_edit.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
+        self.pw_edit.returnPressed.connect(self.try_login)
+        layout.addWidget(self.pw_edit)
+
+        self.error_label = QtWidgets.QLabel("")
+        self.error_label.setStyleSheet("color: #c92a2a;")
+        layout.addWidget(self.error_label)
+
+        ok_btn = QtWidgets.QPushButton("Đăng nhập")
+        ok_btn.setObjectName("PrimaryButton")
+        ok_btn.clicked.connect(self.try_login)
+        layout.addWidget(ok_btn)
+
+    def try_login(self):
+        if verify_password(self.pw_edit.text()):
+            self.accept()
+            return
+        self.attempts += 1
+        remaining = self.MAX_ATTEMPTS - self.attempts
+        if remaining <= 0:
+            QtWidgets.QMessageBox.critical(
+                self, "Đăng nhập thất bại",
+                "Sai mật khẩu quá số lần cho phép. Ứng dụng sẽ đóng.")
+            self.reject()
+            return
+        self.error_label.setText(f"Sai mật khẩu. Còn {remaining} lần thử.")
+        self.pw_edit.clear()
+        self.pw_edit.setFocus()
+
+
+class PasswordManageDialog(QtWidgets.QDialog):
+    """Dat / doi / tat mat khau bao ve ung dung. Chi khoa giao dien - KHONG
+    ma hoa file benh_nhan.db (ai co file van mo duoc bang cong cu SQLite khac)."""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Quản lý mật khẩu ứng dụng")
+        self.resize(400, 240)
+        layout = QtWidgets.QVBoxLayout(self)
+
+        if has_password():
+            layout.addWidget(QtWidgets.QLabel("Nhập mật khẩu hiện tại để tiếp tục:"))
+            self.current_edit = QtWidgets.QLineEdit()
+            self.current_edit.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
+            layout.addWidget(self.current_edit)
+            unlock_btn = QtWidgets.QPushButton("Xác nhận")
+            unlock_btn.clicked.connect(self.unlock)
+            layout.addWidget(unlock_btn)
+
+            self.action_area = QtWidgets.QWidget()
+            self.action_area.setVisible(False)
+            action_layout = QtWidgets.QVBoxLayout(self.action_area)
+            action_layout.setContentsMargins(0, 8, 0, 0)
+            action_layout.addWidget(QtWidgets.QLabel("Mật khẩu mới:"))
+            self.new_edit = QtWidgets.QLineEdit()
+            self.new_edit.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
+            action_layout.addWidget(self.new_edit)
+            self.confirm_edit = QtWidgets.QLineEdit()
+            self.confirm_edit.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
+            self.confirm_edit.setPlaceholderText("Nhập lại mật khẩu mới")
+            action_layout.addWidget(self.confirm_edit)
+            abtns = QtWidgets.QHBoxLayout()
+            save_btn = QtWidgets.QPushButton("Lưu mật khẩu mới")
+            save_btn.setObjectName("PrimaryButton")
+            save_btn.clicked.connect(self.save_new_password)
+            abtns.addWidget(save_btn)
+            remove_btn = QtWidgets.QPushButton("Tắt mật khẩu")
+            remove_btn.setObjectName("DangerButton")
+            remove_btn.clicked.connect(self.disable_password)
+            abtns.addWidget(remove_btn)
+            action_layout.addLayout(abtns)
+            layout.addWidget(self.action_area)
+        else:
+            note = QtWidgets.QLabel(
+                "Đặt mật khẩu để yêu cầu nhập mật khẩu mỗi khi mở ứng dụng.\n"
+                "Lưu ý: đây chỉ là khóa giao diện, KHÔNG mã hóa file benh_nhan.db.")
+            note.setWordWrap(True)
+            layout.addWidget(note)
+            self.new_edit = QtWidgets.QLineEdit()
+            self.new_edit.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
+            self.new_edit.setPlaceholderText("Mật khẩu mới")
+            layout.addWidget(self.new_edit)
+            self.confirm_edit = QtWidgets.QLineEdit()
+            self.confirm_edit.setEchoMode(QtWidgets.QLineEdit.EchoMode.Password)
+            self.confirm_edit.setPlaceholderText("Nhập lại mật khẩu mới")
+            layout.addWidget(self.confirm_edit)
+            save_btn = QtWidgets.QPushButton("Đặt mật khẩu")
+            save_btn.setObjectName("PrimaryButton")
+            save_btn.clicked.connect(self.save_new_password)
+            layout.addWidget(save_btn)
+
+        layout.addStretch(1)
+        close_btn = QtWidgets.QPushButton("Đóng")
+        close_btn.clicked.connect(self.accept)
+        layout.addWidget(close_btn)
+
+    def unlock(self):
+        if verify_password(self.current_edit.text()):
+            self.action_area.setVisible(True)
+            self.current_edit.setEnabled(False)
+        else:
+            QtWidgets.QMessageBox.critical(self, "Sai mật khẩu", "Mật khẩu hiện tại không đúng.")
+
+    def save_new_password(self):
+        pw = self.new_edit.text()
+        confirm = self.confirm_edit.text()
+        if not pw:
+            QtWidgets.QMessageBox.warning(self, "Thiếu thông tin", "Vui lòng nhập mật khẩu mới.")
+            return
+        if pw != confirm:
+            QtWidgets.QMessageBox.warning(self, "Không khớp", "Mật khẩu nhập lại không khớp.")
+            return
+        set_password(pw)
+        QtWidgets.QMessageBox.information(self, "Thành công", "Đã lưu mật khẩu mới.")
+        self.accept()
+
+    def disable_password(self):
+        reply = QtWidgets.QMessageBox.question(
+            self, "Xác nhận", "Tắt mật khẩu bảo vệ ứng dụng?",
+            QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
+        if reply != QtWidgets.QMessageBox.StandardButton.Yes:
+            return
+        remove_password()
+        QtWidgets.QMessageBox.information(self, "Đã tắt", "Đã tắt mật khẩu bảo vệ ứng dụng.")
+        self.accept()
+
+
 class ImportTab(QtWidgets.QWidget):
     def __init__(self, main_window):
         super().__init__()
@@ -205,6 +349,13 @@ class ImportTab(QtWidgets.QWidget):
         self.log.setReadOnly(True)
         layout.addWidget(self.log, stretch=1)
 
+        quality_row = QtWidgets.QHBoxLayout()
+        quality_btn = QtWidgets.QPushButton("Xuất báo cáo chất lượng dữ liệu (Excel/CSV)")
+        quality_btn.clicked.connect(self.export_quality_report)
+        quality_row.addWidget(quality_btn)
+        quality_row.addStretch(1)
+        layout.addLayout(quality_row)
+
         sep = QtWidgets.QFrame()
         sep.setFrameShape(QtWidgets.QFrame.Shape.HLine)
         layout.addWidget(sep)
@@ -218,8 +369,31 @@ class ImportTab(QtWidgets.QWidget):
         fix_btn = QtWidgets.QPushButton("Sửa lỗi đảo cột Giới tính / Ngày sinh")
         fix_btn.clicked.connect(self.fix_swapped)
         row2.addWidget(fix_btn)
+
+        fix_kham_btn = QtWidgets.QPushButton("Sửa lỗi định dạng Ngày khám bị bỏ sót")
+        fix_kham_btn.clicked.connect(self.fix_kham_dates)
+        row2.addWidget(fix_kham_btn)
         row2.addStretch(1)
         layout.addLayout(row2)
+
+        row3 = QtWidgets.QHBoxLayout()
+        backup_btn = QtWidgets.QPushButton("Sao lưu CSDL ngay")
+        backup_btn.clicked.connect(self.backup_now)
+        row3.addWidget(backup_btn)
+
+        open_backup_btn = QtWidgets.QPushButton("Mở thư mục sao lưu")
+        open_backup_btn.clicked.connect(self.open_backup_folder)
+        row3.addWidget(open_backup_btn)
+        row3.addStretch(1)
+        layout.addLayout(row3)
+
+        row4 = QtWidgets.QHBoxLayout()
+        self.password_btn = QtWidgets.QPushButton()
+        self.password_btn.clicked.connect(self.manage_password)
+        row4.addWidget(self.password_btn)
+        row4.addStretch(1)
+        layout.addLayout(row4)
+        self._refresh_password_button()
 
         default_xlsx = self._find_default_xlsx()
         if default_xlsx:
@@ -262,6 +436,16 @@ class ImportTab(QtWidgets.QWidget):
         self.log_line(f"Bỏ qua (dòng dữ liệu giống hệt đã có, tránh nhập trùng khi nhập lại file): {skipped:,}")
         self.log_line("Lưu ý: đây chỉ là bỏ qua dòng nhập lại y hệt. Trùng bệnh nhân (nhiều lượt khám) "
                        "vẫn được giữ nguyên — dùng tab 'Lọc trùng' để xử lý.")
+
+        summary = data_quality_summary()
+        issues = [(label, n) for label, n in summary if n]
+        if issues:
+            self.log_line("Báo cáo chất lượng dữ liệu:")
+            for label, n in issues:
+                self.log_line(f"  - {label}: {n:,} dòng")
+            self.log_line("Dùng nút 'Xuất báo cáo chất lượng dữ liệu' bên dưới để xem chi tiết từng dòng.")
+        else:
+            self.log_line("Không phát hiện vấn đề chất lượng dữ liệu nào.")
         self.log_line("-" * 60)
         self.main_window.on_data_changed()
 
@@ -274,14 +458,17 @@ class ImportTab(QtWidgets.QWidget):
     def reset_db(self):
         reply = QtWidgets.QMessageBox.question(
             self, "Xác nhận",
-            "Xóa TOÀN BỘ dữ liệu hiện có trong cơ sở dữ liệu?\nHành động này không thể hoàn tác.",
+            "Xóa TOÀN BỘ dữ liệu hiện có trong cơ sở dữ liệu?\n"
+            "Một bản sao lưu sẽ được tạo tự động trước khi xóa.",
             QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
         if reply != QtWidgets.QMessageBox.StandardButton.Yes:
             return
+        backup_path = backup_database(reason="truoc_khi_xoa_toan_bo")
         conn = get_conn()
         conn.execute("DELETE FROM patients")
         conn.commit()
         conn.close()
+        self.log_line(f"Đã sao lưu vào: {backup_path}")
         self.log_line("Đã xóa toàn bộ dữ liệu trong CSDL.")
         self.main_window.on_data_changed()
 
@@ -296,13 +483,74 @@ class ImportTab(QtWidgets.QWidget):
             self, "Xác nhận sửa dữ liệu",
             f"Phát hiện {n:,} dòng có cột Giới tính và Ngày sinh bị đảo chỗ cho nhau "
             "(lỗi từ file Excel nguồn, ví dụ Giới tính ghi '1958' còn Ngày sinh ghi 'Nam').\n\n"
-            "Sửa lại các dòng này trong CSDL (hoán đổi 2 cột về đúng vị trí)?",
+            "Sửa lại các dòng này trong CSDL (hoán đổi 2 cột về đúng vị trí)? "
+            "Một bản sao lưu sẽ được tạo tự động trước khi sửa.",
             QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
         if reply != QtWidgets.QMessageBox.StandardButton.Yes:
             return
+        backup_database(reason="truoc_khi_sua_gioitinh")
         fixed = fix_swapped_gender_birthdate()
         self.log_line(f"Đã sửa {fixed:,} dòng bị đảo cột Giới tính / Ngày sinh.")
         self.main_window.on_data_changed()
+
+    def fix_kham_dates(self):
+        n = count_unparsed_kham_dates()
+        if n == 0:
+            QtWidgets.QMessageBox.information(
+                self, "Không có gì để sửa",
+                "Không tìm thấy dòng nào bị lỗi định dạng Ngày khám.")
+            return
+        reply = QtWidgets.QMessageBox.question(
+            self, "Xác nhận sửa dữ liệu",
+            f"Phát hiện {n:,} dòng có Ngày khám không xác định được (ví dụ định dạng "
+            "'HH:MM dd/mm/yyyy' thay vì 'dd/mm/yyyy HH:MM'). Tính lại cho các dòng này?\n"
+            "Một bản sao lưu sẽ được tạo tự động trước khi sửa.",
+            QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
+        if reply != QtWidgets.QMessageBox.StandardButton.Yes:
+            return
+        backup_database(reason="truoc_khi_sua_ngaykham")
+        fixed = fix_unparsed_kham_dates()
+        self.log_line(f"Đã tính lại Ngày khám cho {fixed:,} dòng.")
+        self.main_window.on_data_changed()
+
+    def export_quality_report(self):
+        summary = data_quality_summary()
+        if not any(n for _, n in summary):
+            QtWidgets.QMessageBox.information(
+                self, "Không có vấn đề",
+                "Không phát hiện vấn đề chất lượng dữ liệu nào trong CSDL hiện tại.")
+            return
+        path, _ = QtWidgets.QFileDialog.getSaveFileName(
+            self, "Xuất báo cáo chất lượng dữ liệu",
+            os.path.join(BASE_DIR, "bao_cao_chat_luong_du_lieu.xlsx"), QT_EXPORT_FILTER)
+        if not path:
+            return
+        headers = [label for _, label in COLUMNS] + ["Loại lỗi"]
+        n = export_query_to_file(data_quality_rows_sql(), [], path, headers=headers)
+        QtWidgets.QMessageBox.information(self, "Xuất dữ liệu", f"Đã xuất {n:,} dòng có vấn đề ra:\n{path}")
+
+    def backup_now(self):
+        path = backup_database(reason="thu_cong")
+        if not path:
+            QtWidgets.QMessageBox.warning(self, "Chưa có dữ liệu", "Chưa có CSDL để sao lưu.")
+            return
+        self.log_line(f"Đã sao lưu vào: {path}")
+        QtWidgets.QMessageBox.information(self, "Sao lưu thành công", f"Đã sao lưu vào:\n{path}")
+
+    def open_backup_folder(self):
+        os.makedirs(core.BACKUP_DIR, exist_ok=True)
+        QtGui.QDesktopServices.openUrl(QtCore.QUrl.fromLocalFile(core.BACKUP_DIR))
+
+    def _refresh_password_button(self):
+        if has_password():
+            self.password_btn.setText("Đổi / Tắt mật khẩu ứng dụng")
+        else:
+            self.password_btn.setText("Đặt mật khẩu bảo vệ ứng dụng")
+
+    def manage_password(self):
+        dlg = PasswordManageDialog(self)
+        dlg.exec()
+        self._refresh_password_button()
 
 
 # ------------------------------------------------------------------
@@ -680,6 +928,7 @@ class DedupTab(QtWidgets.QWidget):
             QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
         if reply != QtWidgets.QMessageBox.StandardButton.Yes:
             return
+        backup_database(reason="truoc_khi_gop")
         n = merge_specific_ids(ids, self._order_for_keep())
         QtWidgets.QMessageBox.information(self, "Hoàn tất", f"Đã gộp {n} bản ghi vào bản ghi chính.")
         self.main_window.on_data_changed()
@@ -702,6 +951,7 @@ class DedupTab(QtWidgets.QWidget):
             QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
         if reply != QtWidgets.QMessageBox.StandardButton.Yes:
             return
+        backup_database(reason="truoc_khi_xoa_han")
         n = delete_patients_by_ids(ids)
         QtWidgets.QMessageBox.information(self, "Hoàn tất", f"Đã xóa {n} bản ghi.")
         self.main_window.on_data_changed()
@@ -725,6 +975,7 @@ class DedupTab(QtWidgets.QWidget):
             QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
         if reply != QtWidgets.QMessageBox.StandardButton.Yes:
             return
+        backup_database(reason="truoc_khi_gop_nhom")
         n = merge_group(self.current_key_expr, key_val, self._order_for_keep())
         QtWidgets.QMessageBox.information(self, "Hoàn tất", f"Đã gộp {n} bản ghi vào bản ghi chính của nhóm.")
         self.main_window.on_data_changed()
@@ -812,6 +1063,7 @@ class DedupTab(QtWidgets.QWidget):
             QtWidgets.QMessageBox.StandardButton.Yes | QtWidgets.QMessageBox.StandardButton.No)
         if reply != QtWidgets.QMessageBox.StandardButton.Yes:
             return
+        backup_database(reason="truoc_khi_gop_tat_ca")
         n_g, n_merged = merge_all_groups(
             self.current_key_expr, self.current_key_where, self.current_key_type, order)
         QtWidgets.QMessageBox.information(
@@ -823,6 +1075,207 @@ class DedupTab(QtWidgets.QWidget):
 # ------------------------------------------------------------------
 # Tab Truy van SQL
 # ------------------------------------------------------------------
+
+class FilterRowWidget(QtWidgets.QWidget):
+    """1 dong dieu kien loc trong trinh tao cau lenh: Truong / Toan tu / Gia tri."""
+    removed = QtCore.pyqtSignal(object)
+
+    OPERATORS = [
+        ("bằng", "eq"),
+        ("khác", "ne"),
+        ("chứa", "contains"),
+        ("bắt đầu bằng", "startswith"),
+        ("lớn hơn", "gt"),
+        ("nhỏ hơn", "lt"),
+        ("lớn hơn hoặc bằng", "gte"),
+        ("nhỏ hơn hoặc bằng", "lte"),
+        ("để trống", "empty"),
+        ("không để trống", "not_empty"),
+    ]
+
+    def __init__(self):
+        super().__init__()
+        layout = QtWidgets.QHBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+
+        self.field_combo = QtWidgets.QComboBox()
+        self.field_combo.addItems([label for _, label in COLUMNS])
+        layout.addWidget(self.field_combo, stretch=2)
+
+        self.op_combo = QtWidgets.QComboBox()
+        self.op_combo.addItems([label for label, _ in self.OPERATORS])
+        self.op_combo.currentIndexChanged.connect(self._update_value_visibility)
+        layout.addWidget(self.op_combo, stretch=2)
+
+        self.value_edit = QtWidgets.QLineEdit()
+        self.value_edit.setPlaceholderText("Giá trị")
+        layout.addWidget(self.value_edit, stretch=2)
+
+        remove_btn = QtWidgets.QPushButton("Xóa")
+        remove_btn.setFixedWidth(52)
+        remove_btn.clicked.connect(lambda: self.removed.emit(self))
+        layout.addWidget(remove_btn)
+
+    def _update_value_visibility(self):
+        op_key = self.OPERATORS[self.op_combo.currentIndex()][1]
+        self.value_edit.setEnabled(op_key not in ("empty", "not_empty"))
+
+    def build_condition(self):
+        col = COLUMNS[self.field_combo.currentIndex()][0]
+        op_key = self.OPERATORS[self.op_combo.currentIndex()][1]
+        value = self.value_edit.text().strip()
+        esc = value.replace("'", "''")
+        if op_key == "empty":
+            return f"({col} IS NULL OR TRIM({col}) = '')"
+        if op_key == "not_empty":
+            return f"({col} IS NOT NULL AND TRIM({col}) <> '')"
+        if not value:
+            return None
+        if op_key == "eq":
+            return f"{col} = '{esc}'"
+        if op_key == "ne":
+            return f"{col} <> '{esc}'"
+        if op_key == "contains":
+            return f"{col} LIKE '%{esc}%'"
+        if op_key == "startswith":
+            return f"{col} LIKE '{esc}%'"
+        if op_key == "gt":
+            return f"{col} > '{esc}'"
+        if op_key == "lt":
+            return f"{col} < '{esc}'"
+        if op_key == "gte":
+            return f"{col} >= '{esc}'"
+        if op_key == "lte":
+            return f"{col} <= '{esc}'"
+        return None
+
+
+class QueryBuilderBox(QtWidgets.QGroupBox):
+    """Trinh tao cau lenh SQL bang giao dien (khong can go SQL): chon cot,
+    dieu kien loc, nhom theo, sap xep, gioi han so dong - roi sinh ra cau
+    SELECT tuong ung dua vao khung soan thao ben duoi de xem lai / chay."""
+    build_requested = QtCore.pyqtSignal(str)
+
+    def __init__(self):
+        super().__init__("Trình tạo câu lệnh SQL (không cần biết cú pháp) — bấm để mở/thu gọn")
+        self.setCheckable(True)
+        self.setChecked(False)
+
+        outer = QtWidgets.QVBoxLayout(self)
+        self.content = QtWidgets.QWidget()
+        self.content.setVisible(False)
+        outer.addWidget(self.content)
+        self.toggled.connect(self.content.setVisible)
+
+        layout = QtWidgets.QVBoxLayout(self.content)
+
+        layout.addWidget(QtWidgets.QLabel("Cột muốn hiển thị (bỏ trống = hiển thị tất cả):"))
+        cols_widget = QtWidgets.QWidget()
+        cols_grid = QtWidgets.QGridLayout(cols_widget)
+        cols_grid.setContentsMargins(0, 0, 0, 0)
+        self.column_checks = {}
+        for i, (dbcol, label) in enumerate(COLUMNS):
+            cb = QtWidgets.QCheckBox(label)
+            self.column_checks[dbcol] = cb
+            cols_grid.addWidget(cb, i // 5, i % 5)
+        layout.addWidget(cols_widget)
+
+        layout.addWidget(QtWidgets.QLabel("Điều kiện lọc (kết hợp AND):"))
+        self.filters_container = QtWidgets.QVBoxLayout()
+        layout.addLayout(self.filters_container)
+        self.filter_rows = []
+
+        add_filter_btn = QtWidgets.QPushButton("+ Thêm điều kiện lọc")
+        add_filter_btn.clicked.connect(self.add_filter_row)
+        layout.addWidget(add_filter_btn, alignment=QtCore.Qt.AlignmentFlag.AlignLeft)
+
+        opts_row = QtWidgets.QHBoxLayout()
+        opts_row.addWidget(QtWidgets.QLabel("Nhóm theo:"))
+        self.group_combo = QtWidgets.QComboBox()
+        self.group_combo.addItem("(không nhóm)")
+        self.group_combo.addItems([label for _, label in COLUMNS])
+        opts_row.addWidget(self.group_combo)
+
+        opts_row.addWidget(QtWidgets.QLabel("Sắp xếp theo:"))
+        self.order_combo = QtWidgets.QComboBox()
+        self.order_combo.addItem("(không sắp xếp)")
+        self.order_combo.addItems([label for _, label in COLUMNS])
+        opts_row.addWidget(self.order_combo)
+        self.order_dir_combo = QtWidgets.QComboBox()
+        self.order_dir_combo.addItems(["Tăng dần", "Giảm dần"])
+        opts_row.addWidget(self.order_dir_combo)
+
+        opts_row.addWidget(QtWidgets.QLabel("Giới hạn số dòng:"))
+        self.limit_spin = QtWidgets.QSpinBox()
+        self.limit_spin.setRange(0, 1_000_000)
+        self.limit_spin.setValue(0)
+        self.limit_spin.setSpecialValueText("(không giới hạn)")
+        opts_row.addWidget(self.limit_spin)
+        opts_row.addStretch(1)
+        layout.addLayout(opts_row)
+
+        build_btn = QtWidgets.QPushButton("Tạo câu lệnh SQL")
+        build_btn.setObjectName("PrimaryButton")
+        build_btn.clicked.connect(self.build_sql)
+        layout.addWidget(build_btn, alignment=QtCore.Qt.AlignmentFlag.AlignLeft)
+
+        self.add_filter_row()
+
+    def add_filter_row(self):
+        row = FilterRowWidget()
+        row.removed.connect(self.remove_filter_row)
+        self.filter_rows.append(row)
+        self.filters_container.addWidget(row)
+
+    def remove_filter_row(self, row):
+        if row in self.filter_rows:
+            self.filter_rows.remove(row)
+            row.setParent(None)
+            row.deleteLater()
+
+    def build_sql(self):
+        selected_cols = [c for c, cb in self.column_checks.items() if cb.isChecked()]
+        group_idx = self.group_combo.currentIndex()
+        group_col = COLUMNS[group_idx - 1][0] if group_idx > 0 else None
+
+        if group_col:
+            select_cols = selected_cols or [group_col]
+            if group_col not in select_cols:
+                select_cols = [group_col] + select_cols
+            cols_sql = ", ".join(select_cols) + ", COUNT(*) AS so_luong"
+        else:
+            cols_sql = ", ".join(selected_cols) if selected_cols else "*"
+
+        conditions = []
+        for row in self.filter_rows:
+            cond = row.build_condition()
+            if cond:
+                conditions.append(cond)
+        where_sql = f"WHERE {' AND '.join(conditions)}" if conditions else ""
+        group_sql = f"GROUP BY {group_col}" if group_col else ""
+
+        order_idx = self.order_combo.currentIndex()
+        order_sql = ""
+        if order_idx > 0:
+            order_col = COLUMNS[order_idx - 1][0]
+            direction = "ASC" if self.order_dir_combo.currentIndex() == 0 else "DESC"
+            order_sql = f"ORDER BY {order_col} {direction}"
+        elif group_col:
+            order_sql = "ORDER BY so_luong DESC"
+
+        limit_sql = f"LIMIT {self.limit_spin.value()}" if self.limit_spin.value() > 0 else ""
+
+        parts = [f"SELECT {cols_sql}", "FROM patients"]
+        if where_sql:
+            parts.append(where_sql)
+        if group_sql:
+            parts.append(group_sql)
+        if order_sql:
+            parts.append(order_sql)
+        if limit_sql:
+            parts.append(limit_sql)
+        self.build_requested.emit("\n".join(parts))
+
 
 class SqlTab(QtWidgets.QWidget):
     QUICK_QUERIES = {
@@ -854,6 +1307,10 @@ class SqlTab(QtWidgets.QWidget):
 
         layout = QtWidgets.QVBoxLayout(self)
         layout.setSpacing(10)
+
+        self.builder_box = QueryBuilderBox()
+        self.builder_box.build_requested.connect(self.on_sql_generated)
+        layout.addWidget(self.builder_box)
 
         top = QtWidgets.QHBoxLayout()
         top.addWidget(QtWidgets.QLabel("Câu lệnh nhanh:"))
@@ -895,6 +1352,10 @@ class SqlTab(QtWidgets.QWidget):
         if q:
             self.sql_edit.setPlainText(q)
             self.run_query()
+
+    def on_sql_generated(self, sql):
+        self.sql_edit.setPlainText(sql)
+        self.run_query()
 
     def _validate_select(self, sql):
         stripped = sql.strip().rstrip(";").strip()
@@ -943,6 +1404,21 @@ class SqlTab(QtWidgets.QWidget):
 # Cua so chinh
 # ------------------------------------------------------------------
 
+class UpdateCheckWorker(QtCore.QThread):
+    """Kiem tra ban cap nhat tren nen, khong chan giao dien. Chi phat tin hieu
+    khi thuc su co ban moi hon; im lang neu khong co token / khong co mang."""
+    result = QtCore.pyqtSignal(str)
+
+    def run(self):
+        local = get_local_version()
+        remote, _url = check_latest_release()
+        if not remote or not local:
+            return
+        remote_clean = remote.lstrip("vV")
+        if remote_clean != local:
+            self.result.emit(remote_clean)
+
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -950,6 +1426,24 @@ class MainWindow(QtWidgets.QMainWindow):
         self.resize(1280, 780)
 
         init_db()
+
+        central = QtWidgets.QWidget()
+        central_layout = QtWidgets.QVBoxLayout(central)
+        central_layout.setContentsMargins(0, 0, 0, 0)
+        central_layout.setSpacing(0)
+
+        self.update_banner = QtWidgets.QWidget()
+        self.update_banner.setObjectName("UpdateBanner")
+        self.update_banner.setVisible(False)
+        banner_layout = QtWidgets.QHBoxLayout(self.update_banner)
+        banner_layout.setContentsMargins(14, 8, 14, 8)
+        self.update_banner_label = QtWidgets.QLabel()
+        banner_layout.addWidget(self.update_banner_label)
+        banner_layout.addStretch(1)
+        banner_close_btn = QtWidgets.QPushButton("Đóng")
+        banner_close_btn.clicked.connect(lambda: self.update_banner.setVisible(False))
+        banner_layout.addWidget(banner_close_btn)
+        central_layout.addWidget(self.update_banner)
 
         tabs = QtWidgets.QTabWidget()
         self.import_tab = ImportTab(self)
@@ -961,11 +1455,16 @@ class MainWindow(QtWidgets.QMainWindow):
         tabs.addTab(self.data_tab, "Danh sách")
         tabs.addTab(self.dedup_tab, "Lọc trùng")
         tabs.addTab(self.sql_tab, "Truy vấn SQL")
-        self.setCentralWidget(tabs)
+        central_layout.addWidget(tabs)
+        self.setCentralWidget(central)
 
         self.status_label = QtWidgets.QLabel()
         self.statusBar().addWidget(self.status_label)
         self.refresh_status()
+
+        self.update_worker = UpdateCheckWorker()
+        self.update_worker.result.connect(self.on_update_available)
+        self.update_worker.start()
 
     def refresh_status(self):
         n = record_count()
@@ -974,6 +1473,12 @@ class MainWindow(QtWidgets.QMainWindow):
     def on_data_changed(self):
         self.refresh_status()
         self.data_tab.reload()
+
+    def on_update_available(self, remote_version):
+        self.update_banner_label.setText(
+            f"Có bản cập nhật mới: v{remote_version}. Mở Start Menu → \"Kiểm tra cập nhật\" "
+            "(hoặc chạy update.bat trong thư mục cài đặt) để cập nhật.")
+        self.update_banner.setVisible(True)
 
 
 STYLE_SHEET = """
@@ -1126,6 +1631,14 @@ QStatusBar {
     border-top: 1px solid #dfe4ee;
     color: #5b6472;
 }
+QWidget#UpdateBanner {
+    background: #fff4d6;
+    border-bottom: 1px solid #f0d48a;
+}
+QWidget#UpdateBanner QLabel {
+    color: #6b4f00;
+    font-weight: 500;
+}
 QScrollBar:vertical {
     background: transparent;
     width: 10px;
@@ -1145,6 +1658,12 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     app.setStyle("Fusion")
     app.setStyleSheet(STYLE_SHEET)
+
+    if has_password():
+        login = LoginDialog()
+        if login.exec() != QtWidgets.QDialog.DialogCode.Accepted:
+            sys.exit(0)
+
     win = MainWindow()
     win.show()
     sys.exit(app.exec())

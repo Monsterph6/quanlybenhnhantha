@@ -7,9 +7,13 @@ import os
 import re
 import csv
 import sys
+import json
+import shutil
+import secrets
 import sqlite3
 import hashlib
 import datetime
+import urllib.request
 
 try:
     import openpyxl
@@ -24,6 +28,12 @@ if getattr(sys, "frozen", False):
 else:
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "benh_nhan.db")
+BACKUP_DIR = os.path.join(BASE_DIR, "backups")
+PASSWORD_FILE = os.path.join(BASE_DIR, "app_password.hash")
+VERSION_FILE = os.path.join(BASE_DIR, "VERSION.txt")
+UPDATE_TOKEN_FILE = os.path.join(BASE_DIR, "update_token.txt")
+GITHUB_OWNER = "Monsterph6"
+GITHUB_REPO = "quanlybenhnhantha"
 
 COLUMNS = [
     ("id", "ID"),
@@ -194,9 +204,11 @@ def extract_birth_year(raw):
 
 
 def parse_kham_date_iso(raw):
+    """Tim mau dd/mm/yyyy o bat ky vi tri nao trong chuoi - file nguon co ca
+    dinh dang 'dd/mm/yyyy HH:MM' lan 'HH:MM dd/mm/yyyy'."""
     if not raw:
         return None
-    m = re.match(r"(\d{1,2})/(\d{1,2})/(\d{4})", raw)
+    m = re.search(r"(\d{1,2})/(\d{1,2})/(\d{4})", raw)
     if not m:
         return None
     d, mo, y = m.groups()
@@ -656,3 +668,180 @@ def fix_swapped_gender_birthdate():
     conn.commit()
     conn.close()
     return len(rows)
+
+
+def count_unparsed_kham_dates():
+    conn = get_conn()
+    n = conn.execute(
+        "SELECT COUNT(*) FROM patients WHERE ngay_kham_date IS NULL "
+        "AND ngay_kham_raw IS NOT NULL AND TRIM(ngay_kham_raw) <> ''"
+    ).fetchone()[0]
+    conn.close()
+    return n
+
+
+def fix_unparsed_kham_dates():
+    """Tinh lai ngay_kham_date cho cac dong bi bo sot truoc khi parse_kham_date_iso
+    duoc sua de nhan dang ca dinh dang 'HH:MM dd/mm/yyyy'. Tra ve so dong da sua."""
+    conn = get_conn()
+    rows = conn.execute(
+        "SELECT id, ngay_kham_raw FROM patients WHERE ngay_kham_date IS NULL "
+        "AND ngay_kham_raw IS NOT NULL AND TRIM(ngay_kham_raw) <> ''"
+    ).fetchall()
+    fixed = 0
+    for r in rows:
+        new_date = parse_kham_date_iso(r["ngay_kham_raw"])
+        if new_date:
+            conn.execute("UPDATE patients SET ngay_kham_date = ? WHERE id = ?", (new_date, r["id"]))
+            fixed += 1
+    conn.commit()
+    conn.close()
+    return fixed
+
+
+# ------------------------------------------------------------------
+# Sao luu tu dong truoc cac thao tac nguy hiem (gop hang loat, xoa, reset)
+# ------------------------------------------------------------------
+
+def backup_database(reason="thao_tac", keep=10):
+    """Sao chep benh_nhan.db sang thu muc backups/ kem timestamp. Tu dong don
+    bot, chi giu lai `keep` ban gan nhat. Tra ve duong dan file backup, hoac
+    None neu chua co CSDL de sao luu."""
+    if not os.path.exists(DB_PATH):
+        return None
+    os.makedirs(BACKUP_DIR, exist_ok=True)
+    ts = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+    safe_reason = re.sub(r"[^0-9a-zA-Z_]+", "_", reason)
+    dest = os.path.join(BACKUP_DIR, f"benh_nhan_{ts}_{safe_reason}.db")
+    shutil.copy2(DB_PATH, dest)
+
+    backups = sorted(
+        f for f in os.listdir(BACKUP_DIR)
+        if f.startswith("benh_nhan_") and f.endswith(".db")
+    )
+    for old in backups[:-keep]:
+        try:
+            os.remove(os.path.join(BACKUP_DIR, old))
+        except OSError:
+            pass
+    return dest
+
+
+def list_backups():
+    if not os.path.isdir(BACKUP_DIR):
+        return []
+    return sorted(
+        f for f in os.listdir(BACKUP_DIR)
+        if f.startswith("benh_nhan_") and f.endswith(".db")
+    )
+
+
+# ------------------------------------------------------------------
+# Bao cao chat luong du lieu
+# ------------------------------------------------------------------
+
+DATA_QUALITY_CHECKS = [
+    ("Thiếu Số CCCD", "(so_cccd IS NULL OR TRIM(so_cccd) = '')"),
+    ("Thiếu Mã BHYT", "(ma_bhyt IS NULL OR TRIM(ma_bhyt) = '')"),
+    ("Thiếu Chẩn đoán", "(chan_doan IS NULL OR TRIM(chan_doan) = '')"),
+    ("Không xác định được Năm sinh", "(birth_year IS NULL)"),
+    ("Không xác định được Ngày khám", "(ngay_kham_date IS NULL)"),
+]
+
+
+def data_quality_summary():
+    """Tra ve list (nhan, so_dong) cho tung loai van de du lieu."""
+    conn = get_conn()
+    result = []
+    for label, cond in DATA_QUALITY_CHECKS:
+        n = conn.execute(f"SELECT COUNT(*) FROM patients WHERE {cond}").fetchone()[0]
+        result.append((label, n))
+    conn.close()
+    return result
+
+
+def data_quality_rows_sql():
+    """Cau SQL tra ve cac dong co van de, kem cot 'loai_loi' liet ke ly do."""
+    case_parts = " || ".join(
+        f"CASE WHEN {cond} THEN '{label}; ' ELSE '' END" for label, cond in DATA_QUALITY_CHECKS
+    )
+    where_parts = " OR ".join(cond for _, cond in DATA_QUALITY_CHECKS)
+    cols = ", ".join(c for c, _ in COLUMNS)
+    return f"""
+        SELECT {cols}, TRIM({case_parts}) AS loai_loi
+        FROM patients
+        WHERE {where_parts}
+        ORDER BY id
+    """
+
+
+# ------------------------------------------------------------------
+# Mat khau bao ve ung dung (kiem soat truy cap giao dien - KHONG ma hoa
+# file benh_nhan.db; ai co file van mo duoc bang cong cu SQLite khac)
+# ------------------------------------------------------------------
+
+def has_password():
+    return os.path.exists(PASSWORD_FILE)
+
+
+def _hash_password(password, salt):
+    return hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, 200_000).hex()
+
+
+def set_password(password):
+    salt = secrets.token_bytes(16)
+    h = _hash_password(password, salt)
+    with open(PASSWORD_FILE, "w", encoding="utf-8") as f:
+        f.write(salt.hex() + ":" + h)
+
+
+def verify_password(password):
+    if not has_password():
+        return True
+    with open(PASSWORD_FILE, "r", encoding="utf-8") as f:
+        salt_hex, h = f.read().strip().split(":", 1)
+    return _hash_password(password, bytes.fromhex(salt_hex)) == h
+
+
+def remove_password():
+    if os.path.exists(PASSWORD_FILE):
+        os.remove(PASSWORD_FILE)
+
+
+# ------------------------------------------------------------------
+# Kiem tra ban cap nhat (khong chan giao dien - dung khi khoi dong app)
+# ------------------------------------------------------------------
+
+def get_local_version():
+    if os.path.exists(VERSION_FILE):
+        with open(VERSION_FILE, "r", encoding="utf-8") as f:
+            return f.read().strip()
+    return None
+
+
+def get_update_token():
+    if os.path.exists(UPDATE_TOKEN_FILE):
+        with open(UPDATE_TOKEN_FILE, "r", encoding="utf-8") as f:
+            return f.read().strip()
+    return None
+
+
+def check_latest_release(timeout=5):
+    """Tra ve (tag_moi_nhat, html_url) tu GitHub Releases, hoac (None, None)
+    neu khong kiem tra duoc (khong mang, chua co token, repo chua co release...).
+    Khong bao gio raise loi - danh cho kiem tra nen, khong duoc lam gian doan app."""
+    token = get_update_token()
+    if not token:
+        return None, None
+    url = f"https://api.github.com/repos/{GITHUB_OWNER}/{GITHUB_REPO}/releases/latest"
+    req = urllib.request.Request(url, headers={
+        "Accept": "application/vnd.github+json",
+        "User-Agent": "QuanLyBenhNhanTHA",
+        "Authorization": f"token {token}",
+    })
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        return data.get("tag_name"), data.get("html_url")
+    except Exception:
+        return None, None

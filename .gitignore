@@ -7,8 +7,10 @@
 danh_sach_*.csv
 ket_qua_truy_van.csv
 
-# Token cap nhat (bi mat, khong chia se)
+# Token cap nhat & mat khau ung dung (bi mat, khong chia se)
 update_token.txt
+app_password.hash
+backups/
 
 # Build artifacts
 build/
