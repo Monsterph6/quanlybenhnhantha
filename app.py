@@ -8,6 +8,10 @@ import sys
 import sqlite3
 
 from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtCharts import (
+    QChart, QChartView, QPieSeries, QHorizontalBarSeries, QBarSet,
+    QBarCategoryAxis, QValueAxis,
+)
 
 import core
 import netclient
@@ -26,6 +30,7 @@ from core import (
     has_password, set_password, verify_password, remove_password,
     get_local_version, check_latest_release,
     load_lan_config, save_lan_config,
+    STATS_COLUMNS, stats_top_values, stats_birth_decade,
 )
 
 
@@ -1417,6 +1422,127 @@ class SqlTab(QtWidgets.QWidget):
 
 
 # ------------------------------------------------------------------
+# Tab Thong ke: bieu do truc quan (QtCharts) tren du lieu hien co trong
+# CSDL - khong ve ban do dia ly (chua co du lieu ranh gioi hanh chinh
+# chinh thuc dang tin cay de dua vao ung dung).
+# ------------------------------------------------------------------
+
+class StatsTab(QtWidgets.QWidget):
+    # (nhan hien thi, cot CSDL hoac None cho "Nam sinh theo thap ky", kieu bieu do)
+    STAT_OPTIONS = [
+        ("Giới tính", "gioi_tinh", "pie"),
+        ("Tỉnh/Thành phố", "tinh_tp", "bar"),
+        ("Phường/Xã (top 20)", "phuong_xa", "bar"),
+        ("Chẩn đoán (top 15)", "chan_doan", "bar"),
+        ("Năm sinh theo thập kỷ", None, "bar"),
+    ]
+    LIMITS = {"phuong_xa": 20, "chan_doan": 15}
+
+    def __init__(self, main_window):
+        super().__init__()
+        self.main_window = main_window
+
+        layout = QtWidgets.QVBoxLayout(self)
+        layout.setSpacing(12)
+
+        title = QtWidgets.QLabel("Thống kê trực quan")
+        title.setObjectName("SectionTitle")
+        layout.addWidget(title)
+
+        row = QtWidgets.QHBoxLayout()
+        row.addWidget(QtWidgets.QLabel("Loại thống kê:"))
+        self.type_combo = QtWidgets.QComboBox()
+        self.type_combo.addItems([label for label, _, _ in self.STAT_OPTIONS])
+        self.type_combo.currentIndexChanged.connect(self.reload)
+        row.addWidget(self.type_combo)
+
+        refresh_btn = QtWidgets.QPushButton("Làm mới")
+        refresh_btn.clicked.connect(self.reload)
+        row.addWidget(refresh_btn)
+        row.addStretch(1)
+        layout.addLayout(row)
+
+        self.chart_view = QChartView()
+        self.chart_view.setRenderHint(QtGui.QPainter.RenderHint.Antialiasing)
+        layout.addWidget(self.chart_view, stretch=1)
+
+        self.summary_label = QtWidgets.QLabel()
+        layout.addWidget(self.summary_label)
+
+        self._loaded = False
+
+    def showEvent(self, event):
+        super().showEvent(event)
+        if not self._loaded:
+            self.reload()
+
+    def mark_stale(self):
+        """Goi khi du lieu CSDL thay doi o tab khac - hoan lai viec ve lai
+        bieu do den lan sau tab nay duoc mo, thay vi ve lai ngay ca khi
+        dang khong hien thi."""
+        self._loaded = False
+
+    def reload(self):
+        self._loaded = True
+        label, column, kind = self.STAT_OPTIONS[self.type_combo.currentIndex()]
+        if column is None:
+            data = stats_birth_decade()
+        else:
+            data = stats_top_values(column, limit=self.LIMITS.get(column, 50))
+
+        if not data:
+            self.chart_view.setChart(QChart())
+            self.summary_label.setText("Chưa có dữ liệu để thống kê.")
+            return
+
+        chart = self._make_pie_chart(label, data) if kind == "pie" else self._make_bar_chart(label, data)
+        self.chart_view.setChart(chart)
+        total = sum(n for _, n in data)
+        self.summary_label.setText(f"Tổng {total:,} bản ghi trong {len(data)} nhóm đang hiển thị.")
+
+    def _make_pie_chart(self, title, data):
+        series = QPieSeries()
+        for value, n in data:
+            series.append(f"{value} ({n:,})", n)
+        chart = QChart()
+        chart.addSeries(series)
+        chart.setTitle(title)
+        chart.legend().setVisible(True)
+        chart.legend().setAlignment(QtCore.Qt.AlignmentFlag.AlignRight)
+        return chart
+
+    def _make_bar_chart(self, title, data):
+        # Bieu do ngang (thay vi doc) vi nhan (ten phuong/xa, chan doan...)
+        # thuong la chuoi dai, de doc hon khi de o truc doc.
+        ordered = list(reversed(data))  # gia tri lon nhat nam tren cung
+        bar_set = QBarSet(title)
+        categories = []
+        for value, n in ordered:
+            bar_set.append(n)
+            categories.append(str(value) if value not in (None, "") else "(trống)")
+
+        series = QHorizontalBarSeries()
+        series.append(bar_set)
+
+        chart = QChart()
+        chart.addSeries(series)
+        chart.setTitle(title)
+        chart.legend().setVisible(False)
+
+        axis_y = QBarCategoryAxis()
+        axis_y.append(categories)
+        chart.addAxis(axis_y, QtCore.Qt.AlignmentFlag.AlignLeft)
+        series.attachAxis(axis_y)
+
+        axis_x = QValueAxis()
+        axis_x.setLabelFormat("%d")
+        chart.addAxis(axis_x, QtCore.Qt.AlignmentFlag.AlignBottom)
+        series.attachAxis(axis_x)
+
+        return chart
+
+
+# ------------------------------------------------------------------
 # Tab Mang LAN: ket noi toi may chu chia se benh_nhan.db qua mang LAN
 # noi bo (khong dung Internet/cloud). Ban than ung dung nay (app.py) chi
 # dong vai tro "may tram" (client) - "may chu" la 1 goi rieng, nhe hon
@@ -1573,12 +1699,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.data_tab = DataTab(self)
         self.dedup_tab = DedupTab(self)
         self.sql_tab = SqlTab(self)
+        self.stats_tab = StatsTab(self)
         self.network_tab = NetworkTab(self)
 
         tabs.addTab(self.import_tab, "Nhập dữ liệu")
         tabs.addTab(self.data_tab, "Danh sách")
         tabs.addTab(self.dedup_tab, "Lọc trùng")
         tabs.addTab(self.sql_tab, "Truy vấn SQL")
+        tabs.addTab(self.stats_tab, "Thống kê")
         tabs.addTab(self.network_tab, "Mạng LAN")
         central_layout.addWidget(tabs)
         self.setCentralWidget(central)
@@ -1602,6 +1730,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def on_data_changed(self):
         self.refresh_status()
         self.data_tab.reload()
+        self.stats_tab.mark_stale()
 
     def on_update_available(self, remote_version):
         self.update_banner_label.setText(

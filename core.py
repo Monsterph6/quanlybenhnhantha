@@ -846,6 +846,49 @@ def data_quality_rows_sql():
 
 
 # ------------------------------------------------------------------
+# Thong ke truc quan (dung cho tab "Thong ke" - ve bieu do bang QtCharts)
+# ------------------------------------------------------------------
+
+# Chi cho phep thong ke theo cac cot trong danh sach nay (dua thang ten cot
+# vao f-string SQL ben duoi - KHONG duoc nhan gia tri tuy y tu nguoi dung,
+# chi duoc goi voi 1 trong cac key co san o day).
+STATS_COLUMNS = {
+    "gioi_tinh": "Giới tính",
+    "tinh_tp": "Tỉnh/Thành phố",
+    "phuong_xa": "Phường/Xã",
+    "chan_doan": "Chẩn đoán",
+}
+
+
+def stats_top_values(column, limit=20):
+    """Tra ve list (gia_tri, so_luong) cho 1 cot trong STATS_COLUMNS, xep
+    theo so luong giam dan (bo qua gia tri rong). Dung de ve bieu do."""
+    if column not in STATS_COLUMNS:
+        raise ValueError(f"Cột không hợp lệ để thống kê: {column}")
+    conn = get_conn()
+    rows = conn.execute(f"""
+        SELECT {column}, COUNT(*) AS n FROM patients
+        WHERE TRIM(IFNULL({column}, '')) <> ''
+        GROUP BY {column} ORDER BY n DESC, {column} LIMIT ?
+    """, (limit,)).fetchall()
+    conn.close()
+    return [(r[0], r[1]) for r in rows]
+
+
+def stats_birth_decade():
+    """Tra ve list (nhan_thap_ky vd '1960s', so_luong) theo thap ky nam sinh,
+    sap xep tang dan. Dung de ve bieu do phan bo do tuoi."""
+    conn = get_conn()
+    rows = conn.execute("""
+        SELECT (birth_year / 10) * 10 AS decade, COUNT(*) AS n
+        FROM patients WHERE birth_year IS NOT NULL
+        GROUP BY decade ORDER BY decade
+    """).fetchall()
+    conn.close()
+    return [(f"{int(r[0])}s", r[1]) for r in rows]
+
+
+# ------------------------------------------------------------------
 # Mat khau bao ve ung dung (kiem soat truy cap giao dien - KHONG ma hoa
 # file benh_nhan.db; ai co file van mo duoc bang cong cu SQLite khac)
 # ------------------------------------------------------------------

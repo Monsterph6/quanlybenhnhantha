@@ -21,7 +21,8 @@ Mã nguồn gồm:
 ## Yêu cầu
 
 - Python 3.8 trở lên (máy này đang có Python 3.10).
-- Thư viện `PyQt6` và `openpyxl` (đã có sẵn trên máy này). Nếu máy khác chưa có, chạy:
+- Thư viện `PyQt6`, `PyQt6-Charts` (vẽ biểu đồ ở tab "Thống kê") và `openpyxl`
+  (đã có sẵn trên máy này). Nếu máy khác chưa có, chạy:
   ```
   pip install -r requirements.txt
   ```
@@ -141,7 +142,27 @@ dưới và chạy luôn, có thể chỉnh sửa lại nếu cần trước khi
   ```
 - Xuất kết quả truy vấn ra Excel hoặc CSV bằng nút **Xuất kết quả (Excel/CSV)**.
 
-### 5. Tab "Mạng LAN"
+### 5. Tab "Thống kê"
+
+Vẽ biểu đồ trực quan (dùng PyQt6-Charts) trên dữ liệu hiện có trong CSDL, chọn
+qua ô "Loại thống kê":
+- **Giới tính** — biểu đồ tròn.
+- **Tỉnh/Thành phố**, **Phường/Xã** (top 20), **Chẩn đoán** (top 15) — biểu đồ
+  cột ngang, xếp hạng theo số lượng giảm dần.
+- **Năm sinh theo thập kỷ** — biểu đồ cột theo từng thập kỷ (1960s, 1970s...).
+
+Biểu đồ tự cập nhật khi mở lại tab này sau khi dữ liệu thay đổi (nhập/gộp/xóa
+ở tab khác). Bấm **Làm mới** để vẽ lại ngay lập tức.
+
+> **Không có bản đồ địa lý:** tab này chỉ vẽ biểu đồ cột/tròn theo số liệu,
+> KHÔNG vẽ bản đồ tô màu theo ranh giới hành chính thật (kể cả sau khi Hải
+> Phòng sáp nhập với Hải Dương từ 1/7/2025, còn 114 xã/phường/đặc khu theo mô
+> hình chính quyền 2 cấp) — vì hiện chưa có dữ liệu ranh giới hành chính chính
+> thức đáng tin cậy để đưa vào ứng dụng (chỉ có dữ liệu tham khảo chưa xác
+> thực từ cộng đồng). Nếu có file GeoJSON/KML ranh giới chính thức (ví dụ từ
+> Cổng thông tin điện tử TP Hải Phòng), có thể bổ sung bản đồ thật sau.
+
+### 6. Tab "Mạng LAN"
 
 Dùng khi máy này cần dùng chung dữ liệu với 1 **máy chủ** đã được cài riêng
 trong cùng mạng LAN nội bộ (xem mục "Máy chủ chia sẻ mạng LAN" bên dưới —
