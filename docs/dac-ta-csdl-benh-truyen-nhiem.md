@@ -54,8 +54,26 @@ Trung ương : Cục Phòng bệnh (đầu mối quốc gia), Cục Quản lý K
 
 ## PHẦN B. QUY ƯỚC CHUNG
 - Tiền tố: `dm_` danh mục dùng chung · `btn_` bệnh truyền nhiễm · `bc_` báo cáo/thống kê · `ht_` hệ thống.
-- Khóa chính `id BIGINT` tự tăng; bảng nghiệp vụ có cột chuẩn: `don_vi_id, nguoi_tao_id, ngay_tao, nguoi_cap_nhat_id, ngay_cap_nhat, trang_thai`.
+- Bảng nghiệp vụ có cột chuẩn: `don_vi_id, nguoi_tao_id, ngay_tao, nguoi_cap_nhat_id, ngay_cap_nhat, trang_thai`.
 - Ký hiệu: **PK** khóa chính · **FK** khóa ngoại · **NN** NOT NULL · **UQ** duy nhất.
+
+### B.1. Phân biệt KHÓA KỸ THUẬT và MÃ ĐỊNH DANH NGHIỆP VỤ (quan trọng)
+Mỗi bảng có **hai loại định danh khác nhau**, không được nhầm lẫn:
+
+| | Khóa chính kỹ thuật | Mã định danh nghiệp vụ |
+|---|---|---|
+| Tên trường | `id` (BIGINT tự tăng) | `ma_*` có nghĩa hoặc số định danh cá nhân |
+| Vai trò | Khóa thay thế (surrogate), **chỉ dùng nội bộ** để liên kết khóa ngoại, tối ưu chỉ mục | **Mã dùng để trao đổi, chia sẻ, tra cứu, hiển thị** cho người dùng và liên thông giữa các hệ thống |
+| Chuẩn | Thông lệ thiết kế CSDL (không có trong văn bản) | Bám chuẩn định danh của ngành (QĐ 4210/QĐ-BYT, số định danh cá nhân, mã cơ sở KCB...) |
+| Ví dụ | `id = 12345` | `ma_ca_benh = CB-01-2026-000123`, `so_dinh_danh_ca_nhan = 001099xxxxxx`, `ma_benh`, `ma_o_dich` |
+
+→ **`id` KHÔNG phải "mã định danh"** của bản ghi khi trao đổi dữ liệu. Với mỗi thực thể, mã định danh nghiệp vụ là:
+- Danh mục (`dm_*`): trường `ma_*` (vd `ma_benh`, `ma_don_vi`, `ma_dia_ban`, `ma_dan_toc`) — **UQ**.
+- Cá nhân (`nguoi`): `so_dinh_danh_ca_nhan` (12 chữ số, Luật Căn cước 2023) = mã định danh y tế.
+- Ca bệnh / ổ dịch / khai báo / cảnh báo... (`btn_*`): trường `ma_*` tương ứng (vd `ma_ca_benh`, `ma_o_dich`) — do hệ thống sinh theo cấu trúc `<loại>-<mã địa bàn>-<năm>-<số thứ tự>`, **UQ**.
+- Báo cáo dịch (`btn_bao_cao_dich_benh`): `so_van_ban` (số hiệu văn bản Mẫu 01/02 PL II).
+
+Cấu trúc `id` (surrogate) chỉ nhằm bảo đảm hiệu năng và tính ổn định của quan hệ khi mã nghiệp vụ có thể thay đổi định dạng; **mọi tham chiếu, xuất báo cáo, chia sẻ API đều dùng mã định danh nghiệp vụ**, không phơi bày `id`.
 
 ---
 
@@ -93,8 +111,8 @@ Giá trị: `tram_y_te_xa`, `cskcb`, `cs_xet_nghiem`, `so_y_te`, `ttksbt_tinh`, 
 ### C.5. `dm_benh_truyen_nhiem` — Danh mục bệnh truyền nhiễm
 | Trường | Kiểu | Ràng buộc | Mô tả |
 |---|---|---|---|
-| id | BIGINT | PK | |
-| ma_benh | VARCHAR(20) | UQ, NN | Mã nội bộ |
+| id | BIGINT | PK (kỹ thuật) | Khóa surrogate nội bộ |
+| **ma_benh** | VARCHAR(20) | **UQ, NN — mã định danh nghiệp vụ** | Mã bệnh dùng để trao đổi/tra cứu |
 | ten_benh | VARCHAR(300) | NN | |
 | nhom_phan_loai | CHAR(1) | CHECK IN ('A','B','C') | Theo Điều 15 (tính theo điểm — quy tắc G.1) |
 | ky_han_bao_cao | VARCHAR(20) | NN | `24h` \| `48h` \| `tuan` (Danh mục 01 PL I QĐ97) |
@@ -122,9 +140,9 @@ Giá trị: `tram_y_te_xa`, `cskcb`, `cs_xet_nghiem`, `so_y_te`, `ttksbt_tinh`, 
 ### C.8. `nguoi` — Hồ sơ cá nhân dùng chung *[Đề xuất kỹ thuật]*
 | Trường | Kiểu | Ràng buộc | Mô tả / CHUẨN |
 |---|---|---|---|
-| id | BIGINT | PK | |
+| id | BIGINT | PK (kỹ thuật) | Khóa surrogate nội bộ |
 | ho_ten | VARCHAR(200) | NN | Mẫu 01 PL I |
-| so_dinh_danh_ca_nhan | VARCHAR(12) | UQ | 12 chữ số — **Luật Căn cước 2023** |
+| **so_dinh_danh_ca_nhan** | VARCHAR(12) | **UQ — mã định danh nghiệp vụ** | 12 chữ số — **Luật Căn cước 2023**; là mã định danh chính của cá nhân |
 | ma_dinh_danh_y_te | VARCHAR(20) | UQ | = số định danh cá nhân — **QĐ 2153/QĐ-BYT** |
 | ngay_sinh | DATE | | Có thể chỉ có năm sinh |
 | gioi_tinh | CHAR(1) | CHECK IN('1','2','3') | **1=Nam, 2=Nữ, 3=Chưa xác định — QĐ 4210/QĐ-BYT** |
@@ -142,12 +160,13 @@ Giá trị: `tram_y_te_xa`, `cskcb`, `cs_xet_nghiem`, `so_y_te`, `ttksbt_tinh`, 
 ## PHẦN D. BẢNG NGHIỆP VỤ BỆNH TRUYỀN NHIỄM (`btn_*`)
 
 ### D.1. `btn_doi_tuong_giam_sat` — Đối tượng giám sát *(Điều 5, 7.1a)*
-`id, nguoi_id FK, loai_doi_tuong [mac_benh|mang_mam_benh|nghi_ngo|tiep_xuc|tu_vong_do_hoac_nghi_ngo], don_vi_phat_hien_id FK, ngay_phat_hien DATETIME`
+`id (PK kỹ thuật), ma_doi_tuong_gs (UQ — mã định danh nghiệp vụ), nguoi_id FK, loai_doi_tuong [mac_benh|mang_mam_benh|nghi_ngo|tiep_xuc|tu_vong_do_hoac_nghi_ngo], don_vi_phat_hien_id FK, ngay_phat_hien DATETIME`
 
 ### D.2. `btn_truong_hop_benh` — Báo cáo trường hợp bệnh *(Mẫu 01 PL I; Điều 10.2a)*
 | Trường | Kiểu | Mô tả |
 |---|---|---|
-| id | BIGINT PK | |
+| id | BIGINT PK (kỹ thuật) | Khóa surrogate nội bộ |
+| **ma_ca_benh** | VARCHAR(30) UQ | **Mã định danh nghiệp vụ** — mã ca bệnh (vd CB-01-2026-000123) |
 | doi_tuong_giam_sat_id | FK | |
 | benh_id | FK→dm_benh_truyen_nhiem | |
 | phan_loai_bao_cao | `24h`\|`48h`\|`tuan` | |
@@ -167,7 +186,7 @@ Giá trị: `tram_y_te_xa`, `cskcb`, `cs_xet_nghiem`, `so_y_te`, `ttksbt_tinh`, 
 | o_dich_id | FK→btn_o_dich | nếu ca thuộc 1 ổ dịch |
 
 ### D.3. `btn_o_dich` — Ổ dịch *(Điều 2.1; Mẫu 02, 03 PL I)*
-`id, ten_o_dich, benh_id FK, don_vi_id FK (TYT xã), dia_diem (thôn/tổ, xã, tỉnh), ngay_khoi_phat_ca_dau, ngay_nhap_canh, ngay_den_dia_phuong, ngay_nhan_bao_cao_dau, ngay_khoi_phat_ca_cuoi, ngay_ket_thuc_hoat_dong, mo_ta_yeu_to_nguy_co, trang_thai [dang_hoat_dong|da_ket_thuc]`
+`id (PK kỹ thuật), ma_o_dich (UQ — mã định danh nghiệp vụ, vd OD-<mã xã>-2026-001), ten_o_dich, benh_id FK, don_vi_id FK (TYT xã), dia_diem (thôn/tổ, xã, tỉnh), ngay_khoi_phat_ca_dau, ngay_nhap_canh, ngay_den_dia_phuong, ngay_nhan_bao_cao_dau, ngay_khoi_phat_ca_cuoi, ngay_ket_thuc_hoat_dong, mo_ta_yeu_to_nguy_co, trang_thai [dang_hoat_dong|da_ket_thuc]`
 
 - `btn_o_dich_so_lieu_ngay` *(Mẫu 02 mục 2,3)*: `id, o_dich_id FK, ngay, thon_to, so_mac, so_tu_vong, so_mau_lam_xn, so_xn_duong_tinh`
 - `btn_o_dich_tong_hop` *(Mẫu 03 mục 7)*: `o_dich_id FK(PK), tong_so_mac, tong_so_tu_vong, tong_so_mau_xn, tong_so_mau_duong_tinh`
@@ -178,16 +197,16 @@ Giá trị: `tram_y_te_xa`, `cskcb`, `cs_xet_nghiem`, `so_y_te`, `ttksbt_tinh`, 
 - `btn_bao_cao_dich_benh_chi_tiet` *(Mẫu 04/05 PL I — cấu trúc I–VIII)*: các cột text theo đúng mục (đặc điểm tình hình; số mắc/tử vong so sánh; kết quả XN; phân tích thời gian–địa điểm–con người; yếu tố trung gian/véc tơ; bệnh trên động vật; biện pháp đã triển khai; huy động nguồn lực; đánh giá – nhận định – dự báo; khó khăn; giải pháp; đề xuất).
 
 ### D.5. `btn_khai_bao_ca_nhan` — Khai báo bệnh truyền nhiễm *(Điều 12, 13)*
-`id, nguoi_id FK, cach_thuc_khai_bao [dien_thoai|truc_tiep|hinh_thuc_khac|ung_dung_dien_tu], don_vi_tiep_nhan_id FK (TYT/CSKCB/kiểm dịch cửa khẩu), tinh_trang_suc_khoe, tien_su_tiep_xuc_di_chuyen, ngay_khai_bao, ket_qua_xu_ly`
+`id (PK kỹ thuật), ma_khai_bao (UQ — mã định danh nghiệp vụ), nguoi_id FK, cach_thuc_khai_bao [dien_thoai|truc_tiep|hinh_thuc_khac|ung_dung_dien_tu], don_vi_tiep_nhan_id FK (TYT/CSKCB/kiểm dịch cửa khẩu), tinh_trang_suc_khoe, tien_su_tiep_xuc_di_chuyen, ngay_khai_bao, ket_qua_xu_ly`
 
 ### D.6. `btn_danh_gia_nguy_co` — Đánh giá nguy cơ *(Điều 21)*
-`id, loai_danh_gia [hang_nam|dot_xuat], benh_id FK, don_vi_id FK, ky_danh_gia (năm), ngay_danh_gia, dau_hieu_kich_hoat (8 dấu hiệu Điều 21.2 a–h), muc_do_nguy_co [thap|trung_binh|cao|rat_cao], yeu_to_gia_tang, nang_luc_nguon_luc, bien_phap_de_xuat`
+`id (PK kỹ thuật), ma_danh_gia (UQ — mã định danh nghiệp vụ), loai_danh_gia [hang_nam|dot_xuat], benh_id FK, don_vi_id FK, ky_danh_gia (năm), ngay_danh_gia, dau_hieu_kich_hoat (8 dấu hiệu Điều 21.2 a–h), muc_do_nguy_co [thap|trung_binh|cao|rat_cao], yeu_to_gia_tang, nang_luc_nguon_luc, bien_phap_de_xuat`
 
 ### D.7. `btn_canh_bao_dich_benh` — Cảnh báo dịch *(Điều 22)*
-`id, benh_id FK, don_vi_dia_ban_id FK (TYT xã), dieu_kien_kich_hoat [nhom_a_1_ca|nhom_bc_luu_hanh_vuot_nguong|nhom_bc_khong_luu_hanh_3ca|benh_moi_chua_ghi_nhan], ngay_canh_bao, noi_dung_nguy_co, bien_phap_phong_chong`
+`id (PK kỹ thuật), ma_canh_bao (UQ — mã định danh nghiệp vụ), benh_id FK, don_vi_dia_ban_id FK (TYT xã), dieu_kien_kich_hoat [nhom_a_1_ca|nhom_bc_luu_hanh_vuot_nguong|nhom_bc_khong_luu_hanh_3ca|benh_moi_chua_ghi_nhan], ngay_canh_bao, noi_dung_nguy_co, bien_phap_phong_chong`
 
 ### D.8. `btn_cap_do_phong_thu_dan_su` — Cấp độ PTDS/khẩn cấp *(Điều 17–20)*
-`id, cap_do [cap_1|cap_2|cap_3|khan_cap], dia_ban_id FK, benh_id FK, ngay_ban_bo, ngay_bai_bo, can_cu_tieu_chi`
+`id (PK kỹ thuật), ma_ptds (UQ — mã định danh nghiệp vụ), cap_do [cap_1|cap_2|cap_3|khan_cap], dia_ban_id FK, benh_id FK, ngay_ban_bo, ngay_bai_bo, can_cu_tieu_chi`
 
 ### D.9. `btn_dieu_tra_o_dich` — Nhật ký điều tra 10 bước *(Điều 23)*
 `id, o_dich_id FK, buoc [chuan_bi|xac_minh_chan_doan|khang_dinh_ton_tai|dieu_tra_phat_hien_truong_hop|mo_ta_3_yeu_to|xay_dung_gia_thuyet|danh_gia_kiem_dinh|hoan_thien_gia_thuyet|de_xuat_bien_phap|bao_cao_ket_qua], noi_dung, ngay_thuc_hien, nguoi_thuc_hien_id FK`

@@ -1,17 +1,17 @@
 ﻿STT,CSDL,Ten bang DL,Ten truong DL,Ten ky thuat,Mo ta / Y nghia,Kieu du lieu,Do dai toi da,Loai khoa,Bat buoc,Cho phep trung,Danh sach gia tri,Chua DLCN,Muc do nhay cam,Chia se API,Ghi chu / Can cu phap ly
 ,CSDL Danh mục dùng chung,dm_dia_ban_hanh_chinh,--- Bang: dm_dia_ban_hanh_chinh ---,,,,,,,,,,,,Nền tảng địa bàn dùng chung cho mọi báo cáo — mô hình chính quyền 2 cấp (xã/tỉnh). CHUẨN MÃ: Quyết định 19/2025/QĐ-TTg
-1,CSDL Danh mục dùng chung,dm_dia_ban_hanh_chinh,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-2,CSDL Danh mục dùng chung,dm_dia_ban_hanh_chinh,Mã địa bàn,ma_dia_ban,Mã đơn vị hành chính (tỉnh 2 chữ số; xã 5 chữ số),Text,10,Không,Có,Không,Tỉnh: 01-99; Xã: 00001-99999,Không,,Không,"CHUẨN: Quyết định 19/2025/QĐ-TTg - Bảng danh mục và mã số các đơn vị hành chính Việt Nam (mô hình 2 cấp, hiệu lực 01/7/2025); Cục Thống kê (Bộ Tài chính) quản lý"
+1,CSDL Danh mục dùng chung,dm_dia_ban_hanh_chinh,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+2,CSDL Danh mục dùng chung,dm_dia_ban_hanh_chinh,Mã địa bàn (mã định danh nghiệp vụ),ma_dia_ban,Mã đơn vị hành chính (tỉnh 2 chữ số; xã 5 chữ số),Text,10,UQ,Có,Không,Tỉnh: 01-99; Xã: 00001-99999,Không,,Không,"CHUẨN: Quyết định 19/2025/QĐ-TTg - Bảng danh mục và mã số các đơn vị hành chính Việt Nam (mô hình 2 cấp, hiệu lực 01/7/2025); Cục Thống kê (Bộ Tài chính) quản lý"
 3,CSDL Danh mục dùng chung,dm_dia_ban_hanh_chinh,Tên địa bàn,ten_dia_ban,Tên xã/phường/đặc khu hoặc tỉnh/thành phố,Text,200,Không,Có,Không,,Không,,Không,"Theo QĐ 19/2025/QĐ-TTg (34 tỉnh, 3.321 xã)"
 4,CSDL Danh mục dùng chung,dm_dia_ban_hanh_chinh,Cấp,cap,Cấp hành chính,Text,10,Không,Có,Không,xa; tinh,Không,,Không,
 5,CSDL Danh mục dùng chung,dm_dia_ban_hanh_chinh,Địa bàn cha,dia_ban_cha_id,Tỉnh quản lý (nếu cấp = xã),Số,,FK,Có,Không,,Không,,Không,
 ,CSDL Danh mục dùng chung,dm_loai_don_vi,--- Bang: dm_loai_don_vi ---,,,,,,,,,,,,"Điều 10, 33, 40, 46, 47, 53, 54-64 TT15/2026/TT-BYT"
-6,CSDL Danh mục dùng chung,dm_loai_don_vi,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-7,CSDL Danh mục dùng chung,dm_loai_don_vi,Mã loại đơn vị,ma_loai,"vd: tram_y_te_xa, cskcb, ttksbt_tinh...",Text,40,Không,Có,Không,,Không,,Không,
+6,CSDL Danh mục dùng chung,dm_loai_don_vi,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+7,CSDL Danh mục dùng chung,dm_loai_don_vi,Mã loại đơn vị (mã định danh nghiệp vụ),ma_loai,"vd: tram_y_te_xa, cskcb, ttksbt_tinh...",Text,40,UQ,Có,Không,,Không,,Không,
 8,CSDL Danh mục dùng chung,dm_loai_don_vi,Tên loại đơn vị,ten_loai,Trạm Y tế xã/ CSKCB/ Cơ sở xét nghiệm/ TTKSBT tỉnh/ Trung tâm kiểm dịch y tế quốc tế/ Viện VSDT-Pasteur/ Viện Sốt rét-KST-Côn trùng/ Viện Dinh dưỡng/ Viện SKNN&MT/ Viện YTCC TP.HCM/ Bệnh viện TW/ Bệnh viện Phổi TW/ Cục Phòng bệnh/ Cục QL KCB/ Cơ sở giáo dục/ Cơ sở bảo trợ XH/ Tổ chức kiểm dịch y tế cửa khẩu,Text,200,Không,Có,Không,,Không,,Không,
 ,CSDL Danh mục dùng chung,dm_don_vi,--- Bang: dm_don_vi ---,,,,,,,,,,,,"Điều 10.3, Điều 54-64 TT15 — danh sách đơn vị tham gia hệ thống báo cáo"
-9,CSDL Danh mục dùng chung,dm_don_vi,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-10,CSDL Danh mục dùng chung,dm_don_vi,Mã đơn vị,ma_don_vi,"Mã cơ sở khám bệnh, chữa bệnh/đơn vị y tế",Text,20,Không,Có,Không,,Không,,Không,CHUẨN: Mã cơ sở KCB do Bộ Y tế cấp (Quyết định 5937/QĐ-BYT ngày 30/12/2021 về mã cơ sở KCB dùng chung); đối với TYT xã/đơn vị khác dùng mã liên thông của Bộ Y tế
+9,CSDL Danh mục dùng chung,dm_don_vi,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+10,CSDL Danh mục dùng chung,dm_don_vi,Mã đơn vị (mã định danh nghiệp vụ),ma_don_vi,"Mã cơ sở khám bệnh, chữa bệnh/đơn vị y tế",Text,20,UQ,Có,Không,,Không,,Không,CHUẨN: Mã cơ sở KCB do Bộ Y tế cấp (Quyết định 5937/QĐ-BYT ngày 30/12/2021 về mã cơ sở KCB dùng chung); đối với TYT xã/đơn vị khác dùng mã liên thông của Bộ Y tế
 11,CSDL Danh mục dùng chung,dm_don_vi,Tên đơn vị,ten_don_vi,,Text,300,Không,Có,Không,,Không,,Không,
 12,CSDL Danh mục dùng chung,dm_don_vi,Loại đơn vị,loai_don_vi_id,Tham chiếu dm_loai_don_vi,Số,,FK,Có,Không,,Không,,Không,
 13,CSDL Danh mục dùng chung,dm_don_vi,Địa bàn quản lý,dia_ban_id,Xã/tỉnh phụ trách,Số,,FK,Có,Không,,Không,,Không,
@@ -21,13 +21,13 @@
 17,CSDL Danh mục dùng chung,dm_don_vi,Email,email,,Text,100,Không,Không,Không,,Không,,Không,
 18,CSDL Danh mục dùng chung,dm_don_vi,Trạng thái hoạt động,trang_thai_hoat_dong,,Bool,,Không,Có,Không,,Không,,Không,
 ,CSDL Danh mục dùng chung,dm_dia_ban_phu_trach,--- Bang: dm_dia_ban_phu_trach ---,,,,,,,,,,,,"Điều 10.3 (6 Viện VSDT/Pasteur/SR-KST-CT), Điều 46.2b (Viện Dinh dưỡng...), Điều 53.4 (Viện SKNN&MT...)"
-19,CSDL Danh mục dùng chung,dm_dia_ban_phu_trach,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
+19,CSDL Danh mục dùng chung,dm_dia_ban_phu_trach,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
 20,CSDL Danh mục dùng chung,dm_dia_ban_phu_trach,Viện phụ trách,vien_id,Tham chiếu dm_don_vi,Số,,FK,Có,Không,,Không,,Không,
 21,CSDL Danh mục dùng chung,dm_dia_ban_phu_trach,Tỉnh phụ trách,tinh_id,Tham chiếu dm_dia_ban_hanh_chinh,Số,,FK,Có,Không,,Không,,Không,
 22,CSDL Danh mục dùng chung,dm_dia_ban_phu_trach,Lĩnh vực,linh_vuc,,Text,30,Không,Có,Không,benh_truyen_nhiem; khong_lay_nhiem; roi_loan_tam_than; dinh_duong; thuong_tich,Không,,Không,
 ,CSDL Danh mục dùng chung,dm_benh_truyen_nhiem,--- Bang: dm_benh_truyen_nhiem ---,,,,,,,,,,,,"Danh mục 01 - Phụ lục I QĐ97 (46 bệnh); Điều 14, 15, Phụ lục I TT15 (công thức phân loại)"
-23,CSDL Danh mục dùng chung,dm_benh_truyen_nhiem,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-24,CSDL Danh mục dùng chung,dm_benh_truyen_nhiem,Mã bệnh,ma_benh,Mã nội bộ,Text,20,Không,Có,Không,,Không,,Không,
+23,CSDL Danh mục dùng chung,dm_benh_truyen_nhiem,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+24,CSDL Danh mục dùng chung,dm_benh_truyen_nhiem,Mã bệnh (mã định danh nghiệp vụ),ma_benh,Mã nội bộ,Text,20,UQ,Có,Không,,Không,,Không,
 25,CSDL Danh mục dùng chung,dm_benh_truyen_nhiem,Tên bệnh,ten_benh,,Text,300,Không,Có,Không,46 bệnh theo Danh mục 01 - Phụ lục I QĐ97,Không,,Không,
 26,CSDL Danh mục dùng chung,dm_benh_truyen_nhiem,Nhóm phân loại,nhom_phan_loai,Nhóm bệnh truyền nhiễm,Text,1,Không,Có,Không,A; B; C,Không,,Không,Điều 15 TT15
 27,CSDL Danh mục dùng chung,dm_benh_truyen_nhiem,Kỳ hạn báo cáo,ky_han_bao_cao,Thời hạn báo cáo từng trường hợp bệnh,Text,10,Không,Có,Không,24h; 48h; tuan,Không,,Không,Danh mục 01 - Phụ lục I QĐ97
@@ -39,32 +39,32 @@
 33,CSDL Danh mục dùng chung,dm_benh_truyen_nhiem,Lưu hành tại địa phương,luu_hanh_tai_dia_phuong,Dùng cho quy tắc xác định dịch,Bool,,Không,Không,Không,,Không,,Không,Điều 16.1.b/c TT15
 34,CSDL Danh mục dùng chung,dm_benh_truyen_nhiem,Ghi chú,ghi_chu,,Text,500,Không,Không,Không,,Không,,Không,
 ,CSDL Danh mục dùng chung,dm_benh_truyen_nhiem_icd10,--- Bang: dm_benh_truyen_nhiem_icd10 ---,,,,,,,,,,,,Danh mục 01 - Phụ lục I QĐ97 (46 bệnh + mã ICD-10). CHUẨN MÃ: Thông tư 06/2026/TT-BYT (ICD-10)
-35,CSDL Danh mục dùng chung,dm_benh_truyen_nhiem_icd10,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
+35,CSDL Danh mục dùng chung,dm_benh_truyen_nhiem_icd10,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
 36,CSDL Danh mục dùng chung,dm_benh_truyen_nhiem_icd10,Bệnh truyền nhiễm,benh_id,Tham chiếu dm_benh_truyen_nhiem,Số,,FK,Có,Không,,Không,,Không,
 37,CSDL Danh mục dùng chung,dm_benh_truyen_nhiem_icd10,Mã ICD-10,ma_icd10,"Một bệnh có thể có nhiều mã ICD-10 (vd A80 bại liệt, A20 dịch hạch, J09 cúm A độc lực cao)",Text,10,Không,Có,Có,,Không,,Không,"CHUẨN: Mã bệnh theo ICD-10 - Thông tư 06/2026/TT-BYT ngày 02/4/2026 (mã hoá bệnh tật, nguyên nhân tử vong theo ICD-10 để liên thông dữ liệu). Danh mục 01 - Phụ lục I QĐ97"
 ,CSDL Danh mục dùng chung,dm_nghe_nghiep,--- Bang: dm_nghe_nghiep ---,,,,,,,,,,,,Trường Nghề nghiệp tại Mẫu 01 Phụ lục I QĐ97. CHUẨN MÃ: QĐ 4210/QĐ-BYT (bảng NGHENGHIEP)
-38,CSDL Danh mục dùng chung,dm_nghe_nghiep,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
+38,CSDL Danh mục dùng chung,dm_nghe_nghiep,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
 39,CSDL Danh mục dùng chung,dm_nghe_nghiep,Tên nghề nghiệp,ten_nghe_nghiep,Nghề nghiệp của đối tượng giám sát,Text,100,Không,Có,Không,Theo danh mục nghề nghiệp (mẫu Báo cáo trường hợp bệnh - Mẫu 01 PL I ghi Nghề nghiệp),Không,,Không,CHUẨN: Mã nghề nghiệp theo Quyết định 4210/QĐ-BYT (bảng NGHENGHIEP) / Danh mục nghề nghiệp Việt Nam
 ,CSDL Danh mục dùng chung,dm_dan_toc,--- Bang: dm_dan_toc ---,,,,,,,,,,,,"[Đề xuất kỹ thuật] Cột 6 Mẫu 01 - Phụ lục III QĐ97. CHUẨN MÃ: QĐ 4210/QĐ-BYT (bảng DANTOC), 54 dân tộc theo Tổng cục Thống kê"
-40,CSDL Danh mục dùng chung,dm_dan_toc,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-41,CSDL Danh mục dùng chung,dm_dan_toc,Mã dân tộc,ma_dan_toc,Mã 2 chữ số theo danh mục 54 dân tộc (vd 01=Kinh),Text,2,Không,Có,Không,,Không,,Không,CHUẨN: Quyết định 4210/QĐ-BYT (bảng DANTOC) / Danh mục thành phần dân tộc Việt Nam - Tổng cục Thống kê
+40,CSDL Danh mục dùng chung,dm_dan_toc,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+41,CSDL Danh mục dùng chung,dm_dan_toc,Mã dân tộc (mã định danh nghiệp vụ),ma_dan_toc,Mã 2 chữ số theo danh mục 54 dân tộc (vd 01=Kinh),Text,2,UQ,Có,Không,,Không,,Không,CHUẨN: Quyết định 4210/QĐ-BYT (bảng DANTOC) / Danh mục thành phần dân tộc Việt Nam - Tổng cục Thống kê
 42,CSDL Danh mục dùng chung,dm_dan_toc,Tên dân tộc,ten_dan_toc,Danh mục 54 dân tộc Việt Nam,Text,50,Không,Có,Không,,Không,,Không,
 ,CSDL Danh mục dùng chung,dm_muc_do_nguy_co_dot_xuat,--- Bang: dm_muc_do_nguy_co_dot_xuat ---,,,,,,,,,,,,Điều 21.2 TT15
-43,CSDL Danh mục dùng chung,dm_muc_do_nguy_co_dot_xuat,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
+43,CSDL Danh mục dùng chung,dm_muc_do_nguy_co_dot_xuat,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
 44,CSDL Danh mục dùng chung,dm_muc_do_nguy_co_dot_xuat,Tên mức độ,ten_muc_do,,Text,20,Không,Có,Không,Thấp; Trung bình; Cao; Rất cao,Không,,Không,
 ,CSDL Danh mục dùng chung,dm_cap_do_phong_thu_dan_su,--- Bang: dm_cap_do_phong_thu_dan_su ---,,,,,,,,,,,,Điều 17-20 TT15
-45,CSDL Danh mục dùng chung,dm_cap_do_phong_thu_dan_su,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
+45,CSDL Danh mục dùng chung,dm_cap_do_phong_thu_dan_su,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
 46,CSDL Danh mục dùng chung,dm_cap_do_phong_thu_dan_su,Tên cấp độ,ten_cap_do,,Text,20,Không,Có,Không,Cấp 1; Cấp 2; Cấp 3; Tình trạng khẩn cấp,Không,,Không,
 ,CSDL Danh mục dùng chung,dm_loai_hinh_giam_sat,--- Bang: dm_loai_hinh_giam_sat ---,,,,,,,,,,,,Điều 6 TT15
-47,CSDL Danh mục dùng chung,dm_loai_hinh_giam_sat,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
+47,CSDL Danh mục dùng chung,dm_loai_hinh_giam_sat,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
 48,CSDL Danh mục dùng chung,dm_loai_hinh_giam_sat,Tên loại hình,ten_loai_hinh,,Text,50,Không,Có,Không,Dựa vào chỉ số; Trọng điểm; Dựa vào sự kiện,Không,,Không,
 ,CSDL Danh mục dùng chung,dm_ky_bao_cao,--- Bang: dm_ky_bao_cao ---,,,,,,,,,,,,"Điều 32, 39 TT15 và các điều kỳ báo cáo khác"
-49,CSDL Danh mục dùng chung,dm_ky_bao_cao,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
+49,CSDL Danh mục dùng chung,dm_ky_bao_cao,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
 50,CSDL Danh mục dùng chung,dm_ky_bao_cao,Tên kỳ báo cáo,ten_ky,,Text,20,Không,Có,Không,Tháng; 6 tháng; Năm; Định kỳ 5 năm; Đột xuất,Không,,Không,
 ,CSDL Danh mục dùng chung,nguoi,--- Bang: nguoi ---,,,,,,,,,,,,"[Đề xuất kỹ thuật] Hợp nhất trường nhân khẩu dùng chung cho mọi mẫu sổ/báo cáo (Cột 1-8 các Mẫu sổ PL II, PL III, PL IV). CHUẨN MÃ: số định danh cá nhân (Luật Căn cước 2023), giới tính/dân tộc/quốc gia (QĐ 4210/QĐ-BYT), mã định danh y tế (QĐ 2153/QĐ-BYT)"
-51,CSDL Danh mục dùng chung,nguoi,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
+51,CSDL Danh mục dùng chung,nguoi,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
 52,CSDL Danh mục dùng chung,nguoi,Họ và tên,ho_ten,,Text,200,Không,Có,Không,,Không,,Không,Mẫu 01 Phụ lục I
-53,CSDL Danh mục dùng chung,nguoi,Số định danh cá nhân,so_dinh_danh_ca_nhan,Số định danh cá nhân/CCCD (12 chữ số); người chưa có thì dùng hộ chiếu,Text,20,Không,Có,Không,,Có,Cao,Không,"CHUẨN: 12 chữ số theo cấu trúc số định danh cá nhân - Luật Căn cước 2023, Nghị định 137/2015/NĐ-CP (sửa đổi bởi NĐ 37/2021); đồng bộ CSDL quốc gia về dân cư (Bộ Công an). Mẫu 01 Phụ lục I"
+53,CSDL Danh mục dùng chung,nguoi,Số định danh cá nhân (mã định danh nghiệp vụ),so_dinh_danh_ca_nhan,Số định danh cá nhân/CCCD (12 chữ số); người chưa có thì dùng hộ chiếu,Text,20,UQ,Có,Không,,Có,Cao,Không,"CHUẨN: 12 chữ số theo cấu trúc số định danh cá nhân - Luật Căn cước 2023, Nghị định 137/2015/NĐ-CP (sửa đổi bởi NĐ 37/2021); đồng bộ CSDL quốc gia về dân cư (Bộ Công an). Mẫu 01 Phụ lục I"
 54,CSDL Danh mục dùng chung,nguoi,Mã định danh y tế (ID-HL7),ma_dinh_danh_y_te,"Mã định danh y tế cá nhân, dùng số định danh cá nhân làm ID-Y tế",Text,20,Không,Không,Không,,Có,Cao,Không,"[Đề xuất kỹ thuật] CHUẨN: Quyết định 2153/QĐ-BYT ngày 25/5/2020 - quy chế xác lập, sử dụng và quản lý mã định danh y tế (ID y tế = số định danh cá nhân)"
 55,CSDL Danh mục dùng chung,nguoi,Ngày sinh,ngay_sinh,Có thể chỉ có năm sinh,Ngày,,Không,Không,Không,,Có,Trung bình,Không,
 56,CSDL Danh mục dùng chung,nguoi,Giới tính,gioi_tinh,1=Nam; 2=Nữ; 3=Chưa xác định (hiển thị Nam/Nữ/Không xác định như Mẫu 01 PL I),Text,1,Không,Có,Không,1=Nam; 2=Nữ; 3=Chưa xác định,Có,Thấp,Không,CHUẨN: Mã giới tính theo Quyết định 4210/QĐ-BYT (bảng danh mục GIOITINH)
@@ -77,188 +77,195 @@
 63,CSDL Danh mục dùng chung,nguoi,Địa bàn quản lý,dia_ban_id,Xã quản lý (mã theo QĐ 19/2025/QĐ-TTg) — dùng tổng hợp báo cáo theo địa bàn dân cư,Số,,FK,Không,Không,,Không,,Không,
 64,CSDL Danh mục dùng chung,nguoi,Nơi làm việc/học tập,noi_lam_viec_hoc_tap,,Text,300,Không,Không,Không,,Không,,Không,
 ,CSDL Giám sát bệnh truyền nhiễm,btn_doi_tuong_giam_sat,--- Bang: btn_doi_tuong_giam_sat ---,,,,,,,,,,,,"Điều 5 (đối tượng giám sát), Điều 7.1a (nội dung giám sát hành chính) TT15"
-65,CSDL Giám sát bệnh truyền nhiễm,btn_doi_tuong_giam_sat,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-66,CSDL Giám sát bệnh truyền nhiễm,btn_doi_tuong_giam_sat,Cá nhân,nguoi_id,Tham chiếu bảng nguoi,Số,,FK,Có,Không,,Không,,Không,
-67,CSDL Giám sát bệnh truyền nhiễm,btn_doi_tuong_giam_sat,Loại đối tượng,loai_doi_tuong,,Text,30,Không,Có,Không,mac_benh; mang_mam_benh; nghi_ngo; tiep_xuc; tu_vong_do_hoac_nghi_ngo,Không,,Không,
-68,CSDL Giám sát bệnh truyền nhiễm,btn_doi_tuong_giam_sat,Đơn vị phát hiện,don_vi_phat_hien_id,Tham chiếu dm_don_vi,Số,,FK,Có,Không,,Không,,Không,
-69,CSDL Giám sát bệnh truyền nhiễm,btn_doi_tuong_giam_sat,Ngày phát hiện,ngay_phat_hien,,Ngày,,Không,Có,Không,,Không,,Không,
+65,CSDL Giám sát bệnh truyền nhiễm,btn_doi_tuong_giam_sat,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+66,CSDL Giám sát bệnh truyền nhiễm,btn_doi_tuong_giam_sat,Mã đối tượng giám sát,ma_doi_tuong_gs,"Mã định danh nghiệp vụ của đối tượng giám sát (do hệ thống sinh, vd DTGS-<năm>-<số>)",Text,30,UQ,Có,Không,,Không,,Không,[Đề xuất kỹ thuật] Mã định danh nghiệp vụ dùng để hiển thị/trao đổi (khác id kỹ thuật)
+67,CSDL Giám sát bệnh truyền nhiễm,btn_doi_tuong_giam_sat,Cá nhân,nguoi_id,Tham chiếu bảng nguoi,Số,,FK,Có,Không,,Không,,Không,
+68,CSDL Giám sát bệnh truyền nhiễm,btn_doi_tuong_giam_sat,Loại đối tượng,loai_doi_tuong,,Text,30,Không,Có,Không,mac_benh; mang_mam_benh; nghi_ngo; tiep_xuc; tu_vong_do_hoac_nghi_ngo,Không,,Không,
+69,CSDL Giám sát bệnh truyền nhiễm,btn_doi_tuong_giam_sat,Đơn vị phát hiện,don_vi_phat_hien_id,Tham chiếu dm_don_vi,Số,,FK,Có,Không,,Không,,Không,
+70,CSDL Giám sát bệnh truyền nhiễm,btn_doi_tuong_giam_sat,Ngày phát hiện,ngay_phat_hien,,Ngày,,Không,Có,Không,,Không,,Không,
 ,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,--- Bang: btn_truong_hop_benh ---,,,,,,,,,,,,Mẫu 01 - Phụ lục I QĐ97; Điều 10.2a TT15 — Báo cáo trường hợp bệnh
-70,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-71,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Đối tượng giám sát,doi_tuong_giam_sat_id,Tham chiếu btn_doi_tuong_giam_sat,Số,,FK,Có,Không,,Không,,Không,
-72,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Bệnh truyền nhiễm,benh_id,Tham chiếu dm_benh_truyen_nhiem,Số,,FK,Có,Không,,Không,,Không,
-73,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Phân loại báo cáo,phan_loai_bao_cao,,Text,10,Không,Có,Không,24h; 48h; tuan,Không,,Không,
-74,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Tình trạng tiêm chủng,tinh_trang_tiem_chung,,Text,10,Không,Có,Không,co; khong; khong_ro,Có,Cao,Không,
-75,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Số lần tiêm,so_lan_tiem,Nếu tình trạng tiêm chủng = có,Số,,Không,Không,Không,,Không,,Không,
-76,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Phân loại chẩn đoán,phan_loai_chan_doan,,Text,20,Không,Có,Không,lam_sang_nghi_ngo; xac_dinh_ptn,Không,,Không,
-77,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Ngày khởi phát,ngay_khoi_phat,,Ngày,,Không,Không,Không,,Không,,Không,
-78,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Đã lấy mẫu xét nghiệm,da_lay_mau_xn,,Bool,,Không,Không,Không,,Không,,Không,
-79,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Loại xét nghiệm,loai_xet_nghiem,,Text,30,Không,Không,Không,test_nhanh; huyet_thanh_hoc; pcr_rtpcr; khac,Không,,Không,
-80,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Kết quả xét nghiệm,ket_qua_xet_nghiem,,Text,20,Không,Không,Không,duong_tinh; am_tinh; nghi_ngo; chua_co_ket_qua,Không,,Không,
-81,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Tình trạng điều trị,tinh_trang_dieu_tri,,Text,20,Không,Không,Không,ngoai_tru; noi_tru,Không,,Không,
-82,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Ngày nhập viện,ngay_nhap_vien,,Ngày,,Không,Không,Không,,Không,,Không,
-83,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Ngày ra viện/chuyển viện/tử vong,ngay_ra_vien_chuyen_vien_tu_vong,,Ngày,,Không,Không,Không,,Không,,Không,
-84,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Kết quả cuối,ket_qua_cuoi,,Text,20,Không,Không,Không,ra_vien; chuyen_vien; tu_vong; khac,Không,,Không,
-85,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Tiền sử dịch tễ,tien_su_dich_te,"Đi lại, tiếp xúc người bệnh/nghi ngờ, tiếp xúc động vật/gia cầm, phơi nhiễm khác",Text,1000,Không,Không,Không,,Có,Cao,Không,
-86,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Người báo cáo,nguoi_bao_cao_id,Tham chiếu ht_nguoi_dung,Số,,FK,Không,Không,,Không,,Không,
-87,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Đơn vị báo cáo,don_vi_bao_cao_id,TYT xã/CSKCB/cơ sở xét nghiệm,Số,,FK,Có,Không,,Không,,Không,
-88,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Ổ dịch liên quan,o_dich_id,Nếu ca bệnh thuộc 1 ổ dịch,Số,,FK,Không,Không,,Không,,Không,
+71,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+72,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Mã ca bệnh,ma_ca_benh,Mã định danh ca bệnh dùng để trao đổi/tra cứu trên Hệ thống TT giám sát (vd CB-<mã tỉnh>-<năm>-<số>),Text,30,UQ,Có,Không,,Không,,Không,[Đề xuất kỹ thuật] Mã định danh nghiệp vụ dùng để hiển thị/trao đổi (khác id kỹ thuật)
+73,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Đối tượng giám sát,doi_tuong_giam_sat_id,Tham chiếu btn_doi_tuong_giam_sat,Số,,FK,Có,Không,,Không,,Không,
+74,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Bệnh truyền nhiễm,benh_id,Tham chiếu dm_benh_truyen_nhiem,Số,,FK,Có,Không,,Không,,Không,
+75,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Phân loại báo cáo,phan_loai_bao_cao,,Text,10,Không,Có,Không,24h; 48h; tuan,Không,,Không,
+76,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Tình trạng tiêm chủng,tinh_trang_tiem_chung,,Text,10,Không,Có,Không,co; khong; khong_ro,Có,Cao,Không,
+77,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Số lần tiêm,so_lan_tiem,Nếu tình trạng tiêm chủng = có,Số,,Không,Không,Không,,Không,,Không,
+78,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Phân loại chẩn đoán,phan_loai_chan_doan,,Text,20,Không,Có,Không,lam_sang_nghi_ngo; xac_dinh_ptn,Không,,Không,
+79,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Ngày khởi phát,ngay_khoi_phat,,Ngày,,Không,Không,Không,,Không,,Không,
+80,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Đã lấy mẫu xét nghiệm,da_lay_mau_xn,,Bool,,Không,Không,Không,,Không,,Không,
+81,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Loại xét nghiệm,loai_xet_nghiem,,Text,30,Không,Không,Không,test_nhanh; huyet_thanh_hoc; pcr_rtpcr; khac,Không,,Không,
+82,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Kết quả xét nghiệm,ket_qua_xet_nghiem,,Text,20,Không,Không,Không,duong_tinh; am_tinh; nghi_ngo; chua_co_ket_qua,Không,,Không,
+83,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Tình trạng điều trị,tinh_trang_dieu_tri,,Text,20,Không,Không,Không,ngoai_tru; noi_tru,Không,,Không,
+84,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Ngày nhập viện,ngay_nhap_vien,,Ngày,,Không,Không,Không,,Không,,Không,
+85,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Ngày ra viện/chuyển viện/tử vong,ngay_ra_vien_chuyen_vien_tu_vong,,Ngày,,Không,Không,Không,,Không,,Không,
+86,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Kết quả cuối,ket_qua_cuoi,,Text,20,Không,Không,Không,ra_vien; chuyen_vien; tu_vong; khac,Không,,Không,
+87,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Tiền sử dịch tễ,tien_su_dich_te,"Đi lại, tiếp xúc người bệnh/nghi ngờ, tiếp xúc động vật/gia cầm, phơi nhiễm khác",Text,1000,Không,Không,Không,,Có,Cao,Không,
+88,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Người báo cáo,nguoi_bao_cao_id,Tham chiếu ht_nguoi_dung,Số,,FK,Không,Không,,Không,,Không,
+89,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Đơn vị báo cáo,don_vi_bao_cao_id,TYT xã/CSKCB/cơ sở xét nghiệm,Số,,FK,Có,Không,,Không,,Không,
+90,CSDL Giám sát bệnh truyền nhiễm,btn_truong_hop_benh,Ổ dịch liên quan,o_dich_id,Nếu ca bệnh thuộc 1 ổ dịch,Số,,FK,Không,Không,,Không,,Không,
 ,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,--- Bang: btn_o_dich ---,,,,,,,,,,,,"Điều 2.1 (định nghĩa ổ dịch); Mẫu 02, 03 - Phụ lục I QĐ97"
-89,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-90,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Tên ổ dịch,ten_o_dich,,Text,300,Không,Có,Không,,Không,,Không,
-91,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Bệnh truyền nhiễm,benh_id,Tham chiếu dm_benh_truyen_nhiem,Số,,FK,Có,Không,,Không,,Không,
-92,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Đơn vị quản lý,don_vi_id,Trạm Y tế cấp xã,Số,,FK,Có,Không,,Không,,Không,
-93,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Địa điểm,dia_diem,"Thôn/tổ, xã, tỉnh",Text,500,Không,Có,Không,,Không,,Không,
-94,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Ngày khởi phát ca đầu,ngay_khoi_phat_ca_dau,,Ngày,,Không,Không,Không,,Không,,Không,
-95,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Ngày nhập cảnh,ngay_nhap_canh,Nếu ca khởi phát ở nước ngoài,Ngày,,Không,Không,Không,,Không,,Không,
-96,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Ngày đến địa phương,ngay_den_dia_phuong,Bổ sung nếu khởi phát tại nước ngoài,Ngày,,Không,Không,Không,,Không,,Không,
-97,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Ngày nhận báo cáo đầu,ngay_nhan_bao_cao_dau,,Ngày,,Không,Có,Không,,Không,,Không,
-98,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Ngày khởi phát ca cuối,ngay_khoi_phat_ca_cuoi,Cập nhật khi kết thúc ổ dịch,Ngày,,Không,Không,Không,,Không,,Không,
-99,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Ngày kết thúc hoạt động,ngay_ket_thuc_hoat_dong,,Ngày,,Không,Không,Không,,Không,,Không,
-100,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Mô tả yếu tố nguy cơ,mo_ta_yeu_to_nguy_co,,Text,2000,Không,Không,Không,,Không,,Không,
-101,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Trạng thái,trang_thai,,Text,20,Không,Có,Không,dang_hoat_dong; da_ket_thuc,Không,,Không,
+91,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+92,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Mã ổ dịch,ma_o_dich,Mã định danh ổ dịch (vd OD-<mã xã>-<năm>-<số>),Text,30,UQ,Có,Không,,Không,,Không,[Đề xuất kỹ thuật] Mã định danh nghiệp vụ dùng để hiển thị/trao đổi (khác id kỹ thuật)
+93,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Tên ổ dịch,ten_o_dich,,Text,300,Không,Có,Không,,Không,,Không,
+94,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Bệnh truyền nhiễm,benh_id,Tham chiếu dm_benh_truyen_nhiem,Số,,FK,Có,Không,,Không,,Không,
+95,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Đơn vị quản lý,don_vi_id,Trạm Y tế cấp xã,Số,,FK,Có,Không,,Không,,Không,
+96,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Địa điểm,dia_diem,"Thôn/tổ, xã, tỉnh",Text,500,Không,Có,Không,,Không,,Không,
+97,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Ngày khởi phát ca đầu,ngay_khoi_phat_ca_dau,,Ngày,,Không,Không,Không,,Không,,Không,
+98,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Ngày nhập cảnh,ngay_nhap_canh,Nếu ca khởi phát ở nước ngoài,Ngày,,Không,Không,Không,,Không,,Không,
+99,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Ngày đến địa phương,ngay_den_dia_phuong,Bổ sung nếu khởi phát tại nước ngoài,Ngày,,Không,Không,Không,,Không,,Không,
+100,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Ngày nhận báo cáo đầu,ngay_nhan_bao_cao_dau,,Ngày,,Không,Có,Không,,Không,,Không,
+101,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Ngày khởi phát ca cuối,ngay_khoi_phat_ca_cuoi,Cập nhật khi kết thúc ổ dịch,Ngày,,Không,Không,Không,,Không,,Không,
+102,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Ngày kết thúc hoạt động,ngay_ket_thuc_hoat_dong,,Ngày,,Không,Không,Không,,Không,,Không,
+103,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Mô tả yếu tố nguy cơ,mo_ta_yeu_to_nguy_co,,Text,2000,Không,Không,Không,,Không,,Không,
+104,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich,Trạng thái,trang_thai,,Text,20,Không,Có,Không,dang_hoat_dong; da_ket_thuc,Không,,Không,
 ,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_so_lieu_ngay,--- Bang: btn_o_dich_so_lieu_ngay ---,,,,,,,,,,,,"Mẫu 02 mục 2, 3 - Phụ lục I QĐ97"
-102,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_so_lieu_ngay,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-103,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_so_lieu_ngay,Ổ dịch,o_dich_id,Tham chiếu btn_o_dich,Số,,FK,Có,Không,,Không,,Không,
-104,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_so_lieu_ngay,Ngày,ngay,,Ngày,,Không,Có,Không,,Không,,Không,
-105,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_so_lieu_ngay,Thôn/tổ,thon_to,,Text,100,Không,Không,Không,,Không,,Không,
-106,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_so_lieu_ngay,Số mắc,so_mac,,Số,,Không,Có,Không,,Không,,Không,
-107,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_so_lieu_ngay,Số tử vong,so_tu_vong,,Số,,Không,Có,Không,,Không,,Không,
-108,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_so_lieu_ngay,Số mẫu làm xét nghiệm,so_mau_lam_xn,,Số,,Không,Không,Không,,Không,,Không,
-109,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_so_lieu_ngay,Số xét nghiệm dương tính,so_xn_duong_tinh,,Số,,Không,Không,Không,,Không,,Không,
+105,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_so_lieu_ngay,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+106,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_so_lieu_ngay,Ổ dịch,o_dich_id,Tham chiếu btn_o_dich,Số,,FK,Có,Không,,Không,,Không,
+107,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_so_lieu_ngay,Ngày,ngay,,Ngày,,Không,Có,Không,,Không,,Không,
+108,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_so_lieu_ngay,Thôn/tổ,thon_to,,Text,100,Không,Không,Không,,Không,,Không,
+109,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_so_lieu_ngay,Số mắc,so_mac,,Số,,Không,Có,Không,,Không,,Không,
+110,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_so_lieu_ngay,Số tử vong,so_tu_vong,,Số,,Không,Có,Không,,Không,,Không,
+111,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_so_lieu_ngay,Số mẫu làm xét nghiệm,so_mau_lam_xn,,Số,,Không,Không,Không,,Không,,Không,
+112,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_so_lieu_ngay,Số xét nghiệm dương tính,so_xn_duong_tinh,,Số,,Không,Không,Không,,Không,,Không,
 ,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_tong_hop,--- Bang: btn_o_dich_tong_hop ---,,,,,,,,,,,,Mẫu 03 mục 7 - Phụ lục I QĐ97 (chốt số liệu khi kết thúc ổ dịch)
-110,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_tong_hop,Ổ dịch,o_dich_id,Tham chiếu btn_o_dich (PK),Số,,"PK, FK",Có,Không,,Không,,Không,
-111,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_tong_hop,Tổng số mắc,tong_so_mac,,Số,,Không,Có,Không,,Không,,Không,
-112,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_tong_hop,Tổng số tử vong,tong_so_tu_vong,,Số,,Không,Có,Không,,Không,,Không,
-113,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_tong_hop,Tổng số mẫu xét nghiệm,tong_so_mau_xn,,Số,,Không,Không,Không,,Không,,Không,
-114,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_tong_hop,Tổng số mẫu dương tính,tong_so_mau_duong_tinh,,Số,,Không,Không,Không,,Không,,Không,
+113,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_tong_hop,Ổ dịch,o_dich_id,Tham chiếu btn_o_dich (PK),Số,,"PK, FK",Có,Không,,Không,,Không,
+114,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_tong_hop,Tổng số mắc,tong_so_mac,,Số,,Không,Có,Không,,Không,,Không,
+115,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_tong_hop,Tổng số tử vong,tong_so_tu_vong,,Số,,Không,Có,Không,,Không,,Không,
+116,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_tong_hop,Tổng số mẫu xét nghiệm,tong_so_mau_xn,,Số,,Không,Không,Không,,Không,,Không,
+117,CSDL Giám sát bệnh truyền nhiễm,btn_o_dich_tong_hop,Tổng số mẫu dương tính,tong_so_mau_duong_tinh,,Số,,Không,Không,Không,,Không,,Không,
 ,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,--- Bang: btn_bao_cao_dich_benh ---,,,,,,,,,,,,"Điều 25, 26 TT15; Mẫu 01/02 - Phụ lục II TT15 (thông tin công khai) + Mẫu 04/05 - Phụ lục I QĐ97 (báo cáo đầy đủ)"
-115,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-116,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Ổ dịch,o_dich_id,Tham chiếu btn_o_dich,Số,,FK,Không,Không,,Không,,Không,
-117,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Đơn vị,don_vi_id,Trạm Y tế cấp xã,Số,,FK,Có,Không,,Không,,Không,
-118,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Loại thông tin,loai_thong_tin,,Text,10,Không,Có,Không,co_dich; het_dich,Không,,Không,
-119,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Tên dịch bệnh,ten_dich_benh,,Text,300,Không,Có,Không,,Không,,Không,Điều 25.1a/2a
-120,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Thời gian xác định,thoi_gian_xac_dinh,,Ngày,,Không,Có,Không,,Không,,Không,Điều 25.1b
-121,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Thời gian hết dịch,thoi_gian_het_dich,,Ngày,,Không,Không,Không,,Không,,Không,Điều 25.2b
-122,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Địa điểm có ổ dịch,dia_diem_o_dich,,Text,500,Không,Không,Không,,Không,,Không,Điều 25.1c
-123,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Khuyến nghị,khuyen_nghi,,Text,1000,Không,Không,Không,,Không,,Không,Điều 25.1d/2c
-124,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Số văn bản,so_van_ban,Số hiệu văn bản Mẫu 01/02 PL II TT15,Text,50,Không,Không,Không,,Không,,Không,
-125,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Ngày ban hành,ngay_ban_hanh,Trong vòng 24 giờ kể từ khi xác định,Ngày,,Không,Có,Không,,Không,,Không,Điều 26.1b/c
-126,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Người ký,nguoi_ky_id,Giám đốc Trạm Y tế cấp xã,Số,,FK,Không,Không,,Không,,Không,
-127,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Nơi nhận,noi_nhan,"Chủ tịch UBND xã, CQ chuyên môn y tế tỉnh, TTKSBT tỉnh, lực lượng chuyên trách/kiêm nhiệm",Text,500,Không,Không,Không,,Không,,Không,
+118,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+119,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Ổ dịch,o_dich_id,Tham chiếu btn_o_dich,Số,,FK,Không,Không,,Không,,Không,
+120,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Đơn vị,don_vi_id,Trạm Y tế cấp xã,Số,,FK,Có,Không,,Không,,Không,
+121,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Loại thông tin,loai_thong_tin,,Text,10,Không,Có,Không,co_dich; het_dich,Không,,Không,
+122,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Tên dịch bệnh,ten_dich_benh,,Text,300,Không,Có,Không,,Không,,Không,Điều 25.1a/2a
+123,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Thời gian xác định,thoi_gian_xac_dinh,,Ngày,,Không,Có,Không,,Không,,Không,Điều 25.1b
+124,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Thời gian hết dịch,thoi_gian_het_dich,,Ngày,,Không,Không,Không,,Không,,Không,Điều 25.2b
+125,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Địa điểm có ổ dịch,dia_diem_o_dich,,Text,500,Không,Không,Không,,Không,,Không,Điều 25.1c
+126,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Khuyến nghị,khuyen_nghi,,Text,1000,Không,Không,Không,,Không,,Không,Điều 25.1d/2c
+127,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Số văn bản (mã định danh nghiệp vụ),so_van_ban,Số hiệu văn bản Mẫu 01/02 PL II TT15,Text,50,UQ,Không,Không,,Không,,Không,
+128,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Ngày ban hành,ngay_ban_hanh,Trong vòng 24 giờ kể từ khi xác định,Ngày,,Không,Có,Không,,Không,,Không,Điều 26.1b/c
+129,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Người ký,nguoi_ky_id,Giám đốc Trạm Y tế cấp xã,Số,,FK,Không,Không,,Không,,Không,
+130,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh,Nơi nhận,noi_nhan,"Chủ tịch UBND xã, CQ chuyên môn y tế tỉnh, TTKSBT tỉnh, lực lượng chuyên trách/kiêm nhiệm",Text,500,Không,Không,Không,,Không,,Không,
 ,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,--- Bang: btn_bao_cao_dich_benh_chi_tiet ---,,,,,,,,,,,,"Mẫu 04 (báo cáo dịch bệnh), Mẫu 05 (báo cáo kết thúc dịch bệnh) - Phụ lục I QĐ97 (cấu trúc I-VIII)"
-128,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-129,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,Báo cáo dịch bệnh,bao_cao_id,Tham chiếu btn_bao_cao_dich_benh,Số,,FK,Có,Không,,Không,,Không,
-130,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,I. Đặc điểm tình hình,dac_diem_tinh_hinh,,Text,2000,Không,Không,Không,,Không,,Không,
-131,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,II.1 So mắc/tử vong so sánh,so_mac_tu_vong_so_sanh,"So với TB 5 năm, cùng kỳ năm trước, TB 4 tuần trước",Text,1000,Không,Không,Không,,Không,,Không,
-132,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,II.2 Kết quả xét nghiệm,ket_qua_xet_nghiem,"Số mẫu XN, số dương tính",Text,500,Không,Không,Không,,Không,,Không,
-133,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,II.3 Phân tích theo thời gian/địa điểm/con người,phan_tich_ttdd_con_nguoi,"Quy mô, biểu đồ dịch bệnh, kết quả đánh giá nguy cơ",Text,2000,Không,Không,Không,,Không,,Không,
-134,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,II.4 Yếu tố trung gian/véc tơ,yeu_to_trung_gian_vec_to,,Text,500,Không,Không,Không,,Không,,Không,
-135,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,II.5 Tình hình bệnh trên động vật,tinh_hinh_benh_dong_vat,,Text,500,Không,Không,Không,,Không,,Không,
-136,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,III. Biện pháp đã triển khai,bien_phap_da_trien_khai,"Chỉ đạo, giám sát, truyền thông, vệ sinh môi trường, thu dung điều trị, tiêm chủng",Text,2000,Không,Không,Không,,Không,,Không,
-137,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,IV. Huy động nguồn lực,huy_dong_nguon_luc,"Nhân lực, thiết bị/thuốc/vật tư/hoá chất, kinh phí",Text,1000,Không,Không,Không,,Không,,Không,
-138,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,"V. Đánh giá, nhận định, dự báo",danh_gia_nhan_dinh_du_bao,,Text,1000,Không,Không,Không,,Không,,Không,
-139,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,"VI. Khó khăn, tồn tại",kho_khan_ton_tai,,Text,1000,Không,Không,Không,,Không,,Không,
-140,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,VII. Giải pháp thời gian tới,giai_phap_thoi_gian_toi,,Text,1000,Không,Không,Không,,Không,,Không,
-141,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,"VIII. Đề xuất, kiến nghị",de_xuat_kien_nghi,,Text,1000,Không,Không,Không,,Không,,Không,
+131,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+132,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,Báo cáo dịch bệnh,bao_cao_id,Tham chiếu btn_bao_cao_dich_benh,Số,,FK,Có,Không,,Không,,Không,
+133,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,I. Đặc điểm tình hình,dac_diem_tinh_hinh,,Text,2000,Không,Không,Không,,Không,,Không,
+134,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,II.1 So mắc/tử vong so sánh,so_mac_tu_vong_so_sanh,"So với TB 5 năm, cùng kỳ năm trước, TB 4 tuần trước",Text,1000,Không,Không,Không,,Không,,Không,
+135,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,II.2 Kết quả xét nghiệm,ket_qua_xet_nghiem,"Số mẫu XN, số dương tính",Text,500,Không,Không,Không,,Không,,Không,
+136,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,II.3 Phân tích theo thời gian/địa điểm/con người,phan_tich_ttdd_con_nguoi,"Quy mô, biểu đồ dịch bệnh, kết quả đánh giá nguy cơ",Text,2000,Không,Không,Không,,Không,,Không,
+137,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,II.4 Yếu tố trung gian/véc tơ,yeu_to_trung_gian_vec_to,,Text,500,Không,Không,Không,,Không,,Không,
+138,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,II.5 Tình hình bệnh trên động vật,tinh_hinh_benh_dong_vat,,Text,500,Không,Không,Không,,Không,,Không,
+139,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,III. Biện pháp đã triển khai,bien_phap_da_trien_khai,"Chỉ đạo, giám sát, truyền thông, vệ sinh môi trường, thu dung điều trị, tiêm chủng",Text,2000,Không,Không,Không,,Không,,Không,
+140,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,IV. Huy động nguồn lực,huy_dong_nguon_luc,"Nhân lực, thiết bị/thuốc/vật tư/hoá chất, kinh phí",Text,1000,Không,Không,Không,,Không,,Không,
+141,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,"V. Đánh giá, nhận định, dự báo",danh_gia_nhan_dinh_du_bao,,Text,1000,Không,Không,Không,,Không,,Không,
+142,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,"VI. Khó khăn, tồn tại",kho_khan_ton_tai,,Text,1000,Không,Không,Không,,Không,,Không,
+143,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,VII. Giải pháp thời gian tới,giai_phap_thoi_gian_toi,,Text,1000,Không,Không,Không,,Không,,Không,
+144,CSDL Giám sát bệnh truyền nhiễm,btn_bao_cao_dich_benh_chi_tiet,"VIII. Đề xuất, kiến nghị",de_xuat_kien_nghi,,Text,1000,Không,Không,Không,,Không,,Không,
 ,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,--- Bang: btn_khai_bao_ca_nhan ---,,,,,,,,,,,,"Điều 12, 13 TT15"
-142,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-143,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,Cá nhân,nguoi_id,Tham chiếu bảng nguoi,Số,,FK,Có,Không,,Không,,Không,
-144,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,Cách thức khai báo,cach_thuc_khai_bao,,Text,20,Không,Có,Không,dien_thoai; truc_tiep; hinh_thuc_khac; ung_dung_dien_tu,Không,,Không,
-145,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,Đơn vị tiếp nhận,don_vi_tiep_nhan_id,TYT xã/CSKCB/Tổ chức kiểm dịch y tế cửa khẩu,Số,,FK,Có,Không,,Không,,Không,
-146,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,Tình trạng sức khoẻ,tinh_trang_suc_khoe,,Text,500,Không,Không,Không,,Có,Cao,Không,
-147,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,"Tiền sử tiếp xúc, di chuyển",tien_su_tiep_xuc_di_chuyen,,Text,1000,Không,Không,Không,,Có,Cao,Không,
-148,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,Ngày khai báo,ngay_khai_bao,,Ngày,,Không,Có,Không,,Không,,Không,
-149,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,Kết quả xử lý,ket_qua_xu_ly,Hướng dẫn biện pháp phòng bệnh áp dụng,Text,500,Không,Không,Không,,Không,,Không,
+145,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+146,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,Mã khai báo,ma_khai_bao,Mã định danh phiếu khai báo,Text,30,UQ,Có,Không,,Không,,Không,[Đề xuất kỹ thuật] Mã định danh nghiệp vụ dùng để hiển thị/trao đổi (khác id kỹ thuật)
+147,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,Cá nhân,nguoi_id,Tham chiếu bảng nguoi,Số,,FK,Có,Không,,Không,,Không,
+148,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,Cách thức khai báo,cach_thuc_khai_bao,,Text,20,Không,Có,Không,dien_thoai; truc_tiep; hinh_thuc_khac; ung_dung_dien_tu,Không,,Không,
+149,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,Đơn vị tiếp nhận,don_vi_tiep_nhan_id,TYT xã/CSKCB/Tổ chức kiểm dịch y tế cửa khẩu,Số,,FK,Có,Không,,Không,,Không,
+150,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,Tình trạng sức khoẻ,tinh_trang_suc_khoe,,Text,500,Không,Không,Không,,Có,Cao,Không,
+151,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,"Tiền sử tiếp xúc, di chuyển",tien_su_tiep_xuc_di_chuyen,,Text,1000,Không,Không,Không,,Có,Cao,Không,
+152,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,Ngày khai báo,ngay_khai_bao,,Ngày,,Không,Có,Không,,Không,,Không,
+153,CSDL Giám sát bệnh truyền nhiễm,btn_khai_bao_ca_nhan,Kết quả xử lý,ket_qua_xu_ly,Hướng dẫn biện pháp phòng bệnh áp dụng,Text,500,Không,Không,Không,,Không,,Không,
 ,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,--- Bang: btn_danh_gia_nguy_co ---,,,,,,,,,,,,Điều 21 TT15
-150,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-151,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Loại đánh giá,loai_danh_gia,,Text,20,Không,Có,Không,hang_nam; dot_xuat,Không,,Không,
-152,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Bệnh truyền nhiễm,benh_id,Tham chiếu dm_benh_truyen_nhiem,Số,,FK,Không,Không,,Không,,Không,
-153,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Đơn vị thực hiện,don_vi_id,Cơ quan chuyên môn y tế thực hiện,Số,,FK,Có,Không,,Không,,Không,
-154,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Kỳ đánh giá (năm),ky_danh_gia,Áp dụng nếu hằng năm,Số,,Không,Không,Không,,Không,,Không,
-155,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Ngày đánh giá,ngay_danh_gia,Áp dụng nếu đột xuất,Ngày,,Không,Không,Không,,Không,,Không,
-156,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Dấu hiệu kích hoạt,dau_hieu_kich_hoat,8 dấu hiệu theo Điều 21.2 (a-h),Text,500,Không,Không,Không,,Không,,Không,
-157,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Mức độ nguy cơ,muc_do_nguy_co,Chỉ áp dụng đột xuất,Text,20,Không,Không,Không,thap; trung_binh; cao; rat_cao,Không,,Không,
-158,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Yếu tố gia tăng,yeu_to_gia_tang,,Text,1000,Không,Không,Không,,Không,,Không,
-159,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,"Năng lực, nguồn lực",nang_luc_nguon_luc,,Text,1000,Không,Không,Không,,Không,,Không,
-160,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Biện pháp đề xuất,bien_phap_de_xuat,,Text,1000,Không,Không,Không,,Không,,Không,
+154,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+155,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Mã đánh giá nguy cơ,ma_danh_gia,Mã định danh bản đánh giá nguy cơ,Text,30,UQ,Có,Không,,Không,,Không,[Đề xuất kỹ thuật] Mã định danh nghiệp vụ dùng để hiển thị/trao đổi (khác id kỹ thuật)
+156,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Loại đánh giá,loai_danh_gia,,Text,20,Không,Có,Không,hang_nam; dot_xuat,Không,,Không,
+157,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Bệnh truyền nhiễm,benh_id,Tham chiếu dm_benh_truyen_nhiem,Số,,FK,Không,Không,,Không,,Không,
+158,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Đơn vị thực hiện,don_vi_id,Cơ quan chuyên môn y tế thực hiện,Số,,FK,Có,Không,,Không,,Không,
+159,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Kỳ đánh giá (năm),ky_danh_gia,Áp dụng nếu hằng năm,Số,,Không,Không,Không,,Không,,Không,
+160,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Ngày đánh giá,ngay_danh_gia,Áp dụng nếu đột xuất,Ngày,,Không,Không,Không,,Không,,Không,
+161,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Dấu hiệu kích hoạt,dau_hieu_kich_hoat,8 dấu hiệu theo Điều 21.2 (a-h),Text,500,Không,Không,Không,,Không,,Không,
+162,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Mức độ nguy cơ,muc_do_nguy_co,Chỉ áp dụng đột xuất,Text,20,Không,Không,Không,thap; trung_binh; cao; rat_cao,Không,,Không,
+163,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Yếu tố gia tăng,yeu_to_gia_tang,,Text,1000,Không,Không,Không,,Không,,Không,
+164,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,"Năng lực, nguồn lực",nang_luc_nguon_luc,,Text,1000,Không,Không,Không,,Không,,Không,
+165,CSDL Giám sát bệnh truyền nhiễm,btn_danh_gia_nguy_co,Biện pháp đề xuất,bien_phap_de_xuat,,Text,1000,Không,Không,Không,,Không,,Không,
 ,CSDL Giám sát bệnh truyền nhiễm,btn_canh_bao_dich_benh,--- Bang: btn_canh_bao_dich_benh ---,,,,,,,,,,,,Điều 22 TT15
-161,CSDL Giám sát bệnh truyền nhiễm,btn_canh_bao_dich_benh,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-162,CSDL Giám sát bệnh truyền nhiễm,btn_canh_bao_dich_benh,Bệnh truyền nhiễm,benh_id,Tham chiếu dm_benh_truyen_nhiem,Số,,FK,Có,Không,,Không,,Không,
-163,CSDL Giám sát bệnh truyền nhiễm,btn_canh_bao_dich_benh,Địa bàn (đơn vị),don_vi_dia_ban_id,Trạm Y tế cấp xã,Số,,FK,Có,Không,,Không,,Không,
-164,CSDL Giám sát bệnh truyền nhiễm,btn_canh_bao_dich_benh,Điều kiện kích hoạt,dieu_kien_kich_hoat,,Text,40,Không,Có,Không,nhom_a_1_ca; nhom_bc_luu_hanh_vuot_nguong; nhom_bc_khong_luu_hanh_3ca; benh_moi_chua_ghi_nhan,Không,,Không,Điều 22.1 a-d
-165,CSDL Giám sát bệnh truyền nhiễm,btn_canh_bao_dich_benh,Ngày cảnh báo,ngay_canh_bao,,Ngày,,Không,Có,Không,,Không,,Không,
-166,CSDL Giám sát bệnh truyền nhiễm,btn_canh_bao_dich_benh,Nội dung nguy cơ,noi_dung_nguy_co,"Thời gian, địa điểm, phạm vi, quy mô có thể xảy ra",Text,1000,Không,Không,Không,,Không,,Không,
-167,CSDL Giám sát bệnh truyền nhiễm,btn_canh_bao_dich_benh,Biện pháp phòng chống,bien_phap_phong_chong,,Text,1000,Không,Không,Không,,Không,,Không,
+166,CSDL Giám sát bệnh truyền nhiễm,btn_canh_bao_dich_benh,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+167,CSDL Giám sát bệnh truyền nhiễm,btn_canh_bao_dich_benh,Mã cảnh báo,ma_canh_bao,Mã định danh bản cảnh báo dịch,Text,30,UQ,Có,Không,,Không,,Không,[Đề xuất kỹ thuật] Mã định danh nghiệp vụ dùng để hiển thị/trao đổi (khác id kỹ thuật)
+168,CSDL Giám sát bệnh truyền nhiễm,btn_canh_bao_dich_benh,Bệnh truyền nhiễm,benh_id,Tham chiếu dm_benh_truyen_nhiem,Số,,FK,Có,Không,,Không,,Không,
+169,CSDL Giám sát bệnh truyền nhiễm,btn_canh_bao_dich_benh,Địa bàn (đơn vị),don_vi_dia_ban_id,Trạm Y tế cấp xã,Số,,FK,Có,Không,,Không,,Không,
+170,CSDL Giám sát bệnh truyền nhiễm,btn_canh_bao_dich_benh,Điều kiện kích hoạt,dieu_kien_kich_hoat,,Text,40,Không,Có,Không,nhom_a_1_ca; nhom_bc_luu_hanh_vuot_nguong; nhom_bc_khong_luu_hanh_3ca; benh_moi_chua_ghi_nhan,Không,,Không,Điều 22.1 a-d
+171,CSDL Giám sát bệnh truyền nhiễm,btn_canh_bao_dich_benh,Ngày cảnh báo,ngay_canh_bao,,Ngày,,Không,Có,Không,,Không,,Không,
+172,CSDL Giám sát bệnh truyền nhiễm,btn_canh_bao_dich_benh,Nội dung nguy cơ,noi_dung_nguy_co,"Thời gian, địa điểm, phạm vi, quy mô có thể xảy ra",Text,1000,Không,Không,Không,,Không,,Không,
+173,CSDL Giám sát bệnh truyền nhiễm,btn_canh_bao_dich_benh,Biện pháp phòng chống,bien_phap_phong_chong,,Text,1000,Không,Không,Không,,Không,,Không,
 ,CSDL Giám sát bệnh truyền nhiễm,btn_cap_do_phong_thu_dan_su,--- Bang: btn_cap_do_phong_thu_dan_su ---,,,,,,,,,,,,"Điều 17, 18, 19, 20 TT15"
-168,CSDL Giám sát bệnh truyền nhiễm,btn_cap_do_phong_thu_dan_su,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-169,CSDL Giám sát bệnh truyền nhiễm,btn_cap_do_phong_thu_dan_su,Cấp độ,cap_do,,Text,20,Không,Có,Không,cap_1; cap_2; cap_3; khan_cap,Không,,Không,
-170,CSDL Giám sát bệnh truyền nhiễm,btn_cap_do_phong_thu_dan_su,Địa bàn,dia_ban_id,"Xã (cấp 1)/tỉnh (cấp 2)/1-nhiều tỉnh (cấp 3, khẩn cấp)",Số,,FK,Có,Không,,Không,,Không,
-171,CSDL Giám sát bệnh truyền nhiễm,btn_cap_do_phong_thu_dan_su,Bệnh truyền nhiễm,benh_id,Tham chiếu dm_benh_truyen_nhiem,Số,,FK,Không,Không,,Không,,Không,
-172,CSDL Giám sát bệnh truyền nhiễm,btn_cap_do_phong_thu_dan_su,Ngày ban bố,ngay_ban_bo,,Ngày,,Không,Có,Không,,Không,,Không,
-173,CSDL Giám sát bệnh truyền nhiễm,btn_cap_do_phong_thu_dan_su,Ngày bãi bỏ,ngay_bai_bo,,Ngày,,Không,Không,Không,,Không,,Không,
-174,CSDL Giám sát bệnh truyền nhiễm,btn_cap_do_phong_thu_dan_su,Căn cứ tiêu chí,can_cu_tieu_chi,Ghi rõ tiêu chí đáp ứng theo Điều 17/18/19/20,Text,1000,Không,Không,Không,,Không,,Không,
+174,CSDL Giám sát bệnh truyền nhiễm,btn_cap_do_phong_thu_dan_su,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+175,CSDL Giám sát bệnh truyền nhiễm,btn_cap_do_phong_thu_dan_su,Mã ban bố PTDS,ma_ptds,Mã định danh quyết định ban bố/bãi bỏ cấp độ phòng thủ dân sự,Text,30,UQ,Có,Không,,Không,,Không,[Đề xuất kỹ thuật] Mã định danh nghiệp vụ dùng để hiển thị/trao đổi (khác id kỹ thuật)
+176,CSDL Giám sát bệnh truyền nhiễm,btn_cap_do_phong_thu_dan_su,Cấp độ,cap_do,,Text,20,Không,Có,Không,cap_1; cap_2; cap_3; khan_cap,Không,,Không,
+177,CSDL Giám sát bệnh truyền nhiễm,btn_cap_do_phong_thu_dan_su,Địa bàn,dia_ban_id,"Xã (cấp 1)/tỉnh (cấp 2)/1-nhiều tỉnh (cấp 3, khẩn cấp)",Số,,FK,Có,Không,,Không,,Không,
+178,CSDL Giám sát bệnh truyền nhiễm,btn_cap_do_phong_thu_dan_su,Bệnh truyền nhiễm,benh_id,Tham chiếu dm_benh_truyen_nhiem,Số,,FK,Không,Không,,Không,,Không,
+179,CSDL Giám sát bệnh truyền nhiễm,btn_cap_do_phong_thu_dan_su,Ngày ban bố,ngay_ban_bo,,Ngày,,Không,Có,Không,,Không,,Không,
+180,CSDL Giám sát bệnh truyền nhiễm,btn_cap_do_phong_thu_dan_su,Ngày bãi bỏ,ngay_bai_bo,,Ngày,,Không,Không,Không,,Không,,Không,
+181,CSDL Giám sát bệnh truyền nhiễm,btn_cap_do_phong_thu_dan_su,Căn cứ tiêu chí,can_cu_tieu_chi,Ghi rõ tiêu chí đáp ứng theo Điều 17/18/19/20,Text,1000,Không,Không,Không,,Không,,Không,
 ,CSDL Giám sát bệnh truyền nhiễm,btn_dieu_tra_o_dich,--- Bang: btn_dieu_tra_o_dich ---,,,,,,,,,,,,Điều 23 TT15 (10 bước điều tra ổ dịch)
-175,CSDL Giám sát bệnh truyền nhiễm,btn_dieu_tra_o_dich,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-176,CSDL Giám sát bệnh truyền nhiễm,btn_dieu_tra_o_dich,Ổ dịch,o_dich_id,Tham chiếu btn_o_dich,Số,,FK,Có,Không,,Không,,Không,
-177,CSDL Giám sát bệnh truyền nhiễm,btn_dieu_tra_o_dich,Bước điều tra,buoc,,Text,50,Không,Có,Không,chuan_bi; xac_minh_chan_doan; khang_dinh_ton_tai; dieu_tra_phat_hien_truong_hop; mo_ta_3_yeu_to; xay_dung_gia_thuyet; danh_gia_kiem_dinh; hoan_thien_gia_thuyet; de_xuat_bien_phap; bao_cao_ket_qua,Không,,Không,
-178,CSDL Giám sát bệnh truyền nhiễm,btn_dieu_tra_o_dich,Nội dung,noi_dung,,Text,2000,Không,Không,Không,,Không,,Không,
-179,CSDL Giám sát bệnh truyền nhiễm,btn_dieu_tra_o_dich,Ngày thực hiện,ngay_thuc_hien,,Ngày,,Không,Có,Không,,Không,,Không,
-180,CSDL Giám sát bệnh truyền nhiễm,btn_dieu_tra_o_dich,Người thực hiện,nguoi_thuc_hien_id,Tham chiếu ht_nguoi_dung,Số,,FK,Không,Không,,Không,,Không,
+182,CSDL Giám sát bệnh truyền nhiễm,btn_dieu_tra_o_dich,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+183,CSDL Giám sát bệnh truyền nhiễm,btn_dieu_tra_o_dich,Ổ dịch,o_dich_id,Tham chiếu btn_o_dich,Số,,FK,Có,Không,,Không,,Không,
+184,CSDL Giám sát bệnh truyền nhiễm,btn_dieu_tra_o_dich,Bước điều tra,buoc,,Text,50,Không,Có,Không,chuan_bi; xac_minh_chan_doan; khang_dinh_ton_tai; dieu_tra_phat_hien_truong_hop; mo_ta_3_yeu_to; xay_dung_gia_thuyet; danh_gia_kiem_dinh; hoan_thien_gia_thuyet; de_xuat_bien_phap; bao_cao_ket_qua,Không,,Không,
+185,CSDL Giám sát bệnh truyền nhiễm,btn_dieu_tra_o_dich,Nội dung,noi_dung,,Text,2000,Không,Không,Không,,Không,,Không,
+186,CSDL Giám sát bệnh truyền nhiễm,btn_dieu_tra_o_dich,Ngày thực hiện,ngay_thuc_hien,,Ngày,,Không,Có,Không,,Không,,Không,
+187,CSDL Giám sát bệnh truyền nhiễm,btn_dieu_tra_o_dich,Người thực hiện,nguoi_thuc_hien_id,Tham chiếu ht_nguoi_dung,Số,,FK,Không,Không,,Không,,Không,
 ,CSDL Giám sát bệnh truyền nhiễm,btn_bien_phap_xu_ly_o_dich,--- Bang: btn_bien_phap_xu_ly_o_dich ---,,,,,,,,,,,,Điều 24.1 TT15 (9 nhóm biện pháp a-i)
-181,CSDL Giám sát bệnh truyền nhiễm,btn_bien_phap_xu_ly_o_dich,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-182,CSDL Giám sát bệnh truyền nhiễm,btn_bien_phap_xu_ly_o_dich,Ổ dịch,o_dich_id,Tham chiếu btn_o_dich,Số,,FK,Có,Không,,Không,,Không,
-183,CSDL Giám sát bệnh truyền nhiễm,btn_bien_phap_xu_ly_o_dich,Loại biện pháp,loai_bien_phap,,Text,30,Không,Có,Không,xu_ly_nguon_benh; xu_ly_duong_truyen; bao_ve_nguoi_dan; truyen_thong; khu_trung; dieu_tra_xu_ly_tu_vong; phoi_hop_lien_nganh_quoc_te; khoanh_vung_kiem_soat; ra_soat_sau_dap_ung,Không,,Không,
-184,CSDL Giám sát bệnh truyền nhiễm,btn_bien_phap_xu_ly_o_dich,Ngày triển khai,ngay_trien_khai,,Ngày,,Không,Không,Không,,Không,,Không,
-185,CSDL Giám sát bệnh truyền nhiễm,btn_bien_phap_xu_ly_o_dich,Mô tả,mo_ta,,Text,1000,Không,Không,Không,,Không,,Không,
+188,CSDL Giám sát bệnh truyền nhiễm,btn_bien_phap_xu_ly_o_dich,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+189,CSDL Giám sát bệnh truyền nhiễm,btn_bien_phap_xu_ly_o_dich,Ổ dịch,o_dich_id,Tham chiếu btn_o_dich,Số,,FK,Có,Không,,Không,,Không,
+190,CSDL Giám sát bệnh truyền nhiễm,btn_bien_phap_xu_ly_o_dich,Loại biện pháp,loai_bien_phap,,Text,30,Không,Có,Không,xu_ly_nguon_benh; xu_ly_duong_truyen; bao_ve_nguoi_dan; truyen_thong; khu_trung; dieu_tra_xu_ly_tu_vong; phoi_hop_lien_nganh_quoc_te; khoanh_vung_kiem_soat; ra_soat_sau_dap_ung,Không,,Không,
+191,CSDL Giám sát bệnh truyền nhiễm,btn_bien_phap_xu_ly_o_dich,Ngày triển khai,ngay_trien_khai,,Ngày,,Không,Không,Không,,Không,,Không,
+192,CSDL Giám sát bệnh truyền nhiễm,btn_bien_phap_xu_ly_o_dich,Mô tả,mo_ta,,Text,1000,Không,Không,Không,,Không,,Không,
 ,CSDL Báo cáo - thống kê dùng chung,dm_chi_tieu,--- Bang: dm_chi_tieu ---,,,,,,,,,,,,"[Đề xuất kỹ thuật] Danh mục chỉ tiêu tổng hợp báo cáo tình hình bệnh, dịch bệnh truyền nhiễm (Điều 10.3 TT15)"
-186,CSDL Báo cáo - thống kê dùng chung,dm_chi_tieu,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-187,CSDL Báo cáo - thống kê dùng chung,dm_chi_tieu,Mã chỉ tiêu,ma_chi_tieu,"vd BTN_TUAN_TONG_MAC, BTN_THANG_SXH",Text,30,Không,Có,Không,,Không,,Không,
-188,CSDL Báo cáo - thống kê dùng chung,dm_chi_tieu,Tên chỉ tiêu,ten_chi_tieu,Nguyên văn dòng chỉ tiêu trong mẫu báo cáo giấy,Text,500,Không,Có,Không,,Không,,Không,
-189,CSDL Báo cáo - thống kê dùng chung,dm_chi_tieu,Mẫu báo cáo,mau_bao_cao,"vd PL_II_M02, PL_IV_M08",Text,20,Không,Có,Không,,Không,,Không,
-190,CSDL Báo cáo - thống kê dùng chung,dm_chi_tieu,Lĩnh vực,linh_vuc,Cố định cho bệnh truyền nhiễm,Text,20,Không,Có,Không,benh_truyen_nhiem,Không,,Không,
-191,CSDL Báo cáo - thống kê dùng chung,dm_chi_tieu,Đơn vị tính,don_vi_tinh,,Text,20,Không,Có,Không,nguoi; %; ca; lan...,Không,,Không,
-192,CSDL Báo cáo - thống kê dùng chung,dm_chi_tieu,Công thức tính,cong_thuc,Nếu là chỉ tiêu tỷ lệ,Text,500,Không,Không,Không,,Không,,Không,
+193,CSDL Báo cáo - thống kê dùng chung,dm_chi_tieu,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+194,CSDL Báo cáo - thống kê dùng chung,dm_chi_tieu,Mã chỉ tiêu (mã định danh nghiệp vụ),ma_chi_tieu,"vd BTN_TUAN_TONG_MAC, BTN_THANG_SXH",Text,30,UQ,Có,Không,,Không,,Không,
+195,CSDL Báo cáo - thống kê dùng chung,dm_chi_tieu,Tên chỉ tiêu,ten_chi_tieu,Nguyên văn dòng chỉ tiêu trong mẫu báo cáo giấy,Text,500,Không,Có,Không,,Không,,Không,
+196,CSDL Báo cáo - thống kê dùng chung,dm_chi_tieu,Mẫu báo cáo,mau_bao_cao,"vd PL_II_M02, PL_IV_M08",Text,20,Không,Có,Không,,Không,,Không,
+197,CSDL Báo cáo - thống kê dùng chung,dm_chi_tieu,Lĩnh vực,linh_vuc,Cố định cho bệnh truyền nhiễm,Text,20,Không,Có,Không,benh_truyen_nhiem,Không,,Không,
+198,CSDL Báo cáo - thống kê dùng chung,dm_chi_tieu,Đơn vị tính,don_vi_tinh,,Text,20,Không,Có,Không,nguoi; %; ca; lan...,Không,,Không,
+199,CSDL Báo cáo - thống kê dùng chung,dm_chi_tieu,Công thức tính,cong_thuc,Nếu là chỉ tiêu tỷ lệ,Text,500,Không,Không,Không,,Không,,Không,
 ,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,--- Bang: bc_chi_tieu_thong_ke ---,,,,,,,,,,,,[Đề xuất kỹ thuật] Fact-table tổng hợp số ca mắc/tử vong bệnh truyền nhiễm theo kỳ/địa bàn
-193,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-194,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Chỉ tiêu,chi_tieu_id,Tham chiếu dm_chi_tieu,Số,,FK,Có,Không,,Không,,Không,
-195,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Đơn vị báo cáo,don_vi_bao_cao_id,Tham chiếu dm_don_vi,Số,,FK,Có,Không,,Không,,Không,
-196,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Kỳ báo cáo,ky_bao_cao,,Text,10,Không,Có,Không,thang; 6thang; nam; 5nam; dot_xuat,Không,,Không,
-197,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Năm,nam,,Số,,Không,Có,Không,,Không,,Không,
-198,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Tháng,thang,NULL nếu kỳ khác tháng,Số,,Không,Không,Không,,Không,,Không,
-199,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Phân tổ giới tính,phan_to_gioi_tinh,,Text,10,Không,Không,Không,nam; nu; chung,Không,,Không,
-200,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Phân tổ nhóm tuổi,phan_to_nhom_tuoi,"vd 0-4, 5-15, 16-19, 20-60, >60 (thương tích) hoặc 0-59thang, 5-18, 19-59, >=60 (dinh dưỡng)",Text,20,Không,Không,Không,"vd 0-4, 5-15, 16-60, >60 (tuỳ bệnh)",Không,,Không,
-201,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Phân tổ khác,phan_to_khac,"vd theo tuyến, theo bệnh, theo địa bàn",Text,100,Không,Không,Không,,Không,,Không,
-202,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Giá trị số lượng,gia_tri_so_luong,,Số,,Không,Không,Không,,Không,,Không,
-203,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Giá trị tỷ lệ,gia_tri_ty_le,,Số,,Không,Không,Không,,Không,,Không,
-204,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Nguồn tính toán,nguon_tinh_toan,,Text,30,Không,Có,Không,tu_dong_tu_du_lieu_tac_nghiep; nhap_thu_cong,Không,,Không,
-205,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Ngày chốt số liệu,ngay_chot_so_lieu,,Ngày,,Không,Có,Không,,Không,,Không,
-206,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Trạng thái gửi,trang_thai_gui,,Text,20,Không,Có,Không,nhap; da_gui; da_duyet; tra_lai,Không,,Không,
+200,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+201,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Chỉ tiêu,chi_tieu_id,Tham chiếu dm_chi_tieu,Số,,FK,Có,Không,,Không,,Không,
+202,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Đơn vị báo cáo,don_vi_bao_cao_id,Tham chiếu dm_don_vi,Số,,FK,Có,Không,,Không,,Không,
+203,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Kỳ báo cáo,ky_bao_cao,,Text,10,Không,Có,Không,thang; 6thang; nam; 5nam; dot_xuat,Không,,Không,
+204,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Năm,nam,,Số,,Không,Có,Không,,Không,,Không,
+205,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Tháng,thang,NULL nếu kỳ khác tháng,Số,,Không,Không,Không,,Không,,Không,
+206,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Phân tổ giới tính,phan_to_gioi_tinh,,Text,10,Không,Không,Không,nam; nu; chung,Không,,Không,
+207,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Phân tổ nhóm tuổi,phan_to_nhom_tuoi,"vd 0-4, 5-15, 16-19, 20-60, >60 (thương tích) hoặc 0-59thang, 5-18, 19-59, >=60 (dinh dưỡng)",Text,20,Không,Không,Không,"vd 0-4, 5-15, 16-60, >60 (tuỳ bệnh)",Không,,Không,
+208,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Phân tổ khác,phan_to_khac,"vd theo tuyến, theo bệnh, theo địa bàn",Text,100,Không,Không,Không,,Không,,Không,
+209,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Giá trị số lượng,gia_tri_so_luong,,Số,,Không,Không,Không,,Không,,Không,
+210,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Giá trị tỷ lệ,gia_tri_ty_le,,Số,,Không,Không,Không,,Không,,Không,
+211,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Nguồn tính toán,nguon_tinh_toan,,Text,30,Không,Có,Không,tu_dong_tu_du_lieu_tac_nghiep; nhap_thu_cong,Không,,Không,
+212,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Ngày chốt số liệu,ngay_chot_so_lieu,,Ngày,,Không,Có,Không,,Không,,Không,
+213,CSDL Báo cáo - thống kê dùng chung,bc_chi_tieu_thong_ke,Trạng thái gửi,trang_thai_gui,,Text,20,Không,Có,Không,nhap; da_gui; da_duyet; tra_lai,Không,,Không,
 ,CSDL Báo cáo - thống kê dùng chung,bc_luong_bao_cao,--- Bang: bc_luong_bao_cao ---,,,,,,,,,,,,"[Đề xuất kỹ thuật] Giám sát tuân thủ thời hạn báo cáo theo Điều 10, 11, 26, 33, 40, 46, 47, 53 TT15 — phục vụ tính chỉ tiêu 'tỷ lệ đơn vị gửi đúng hạn' (Mẫu 13 PL IV mục I.1)"
-207,CSDL Báo cáo - thống kê dùng chung,bc_luong_bao_cao,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-208,CSDL Báo cáo - thống kê dùng chung,bc_luong_bao_cao,Đơn vị gửi,don_vi_gui_id,Tham chiếu dm_don_vi,Số,,FK,Có,Không,,Không,,Không,
-209,CSDL Báo cáo - thống kê dùng chung,bc_luong_bao_cao,Đơn vị nhận,don_vi_nhan_id,Tham chiếu dm_don_vi,Số,,FK,Có,Không,,Không,,Không,
-210,CSDL Báo cáo - thống kê dùng chung,bc_luong_bao_cao,Lĩnh vực,linh_vuc,,Text,20,Không,Có,Không,benh_truyen_nhiem,Không,,Không,
-211,CSDL Báo cáo - thống kê dùng chung,bc_luong_bao_cao,Kỳ báo cáo,ky_bao_cao_id,Tham chiếu dm_ky_bao_cao,Số,,FK,Có,Không,,Không,,Không,
-212,CSDL Báo cáo - thống kê dùng chung,bc_luong_bao_cao,Hạn gửi,han_gui,Tính từ ngày kết thúc kỳ báo cáo + số ngày làm việc quy định,Ngày,,Không,Có,Không,,Không,,Không,
-213,CSDL Báo cáo - thống kê dùng chung,bc_luong_bao_cao,Ngày gửi thực tế,ngay_gui_thuc_te,,Ngày,,Không,Không,Không,,Không,,Không,
-214,CSDL Báo cáo - thống kê dùng chung,bc_luong_bao_cao,Trạng thái,trang_thai,,Text,20,Không,Có,Không,dung_han; tre_han; chua_gui,Không,,Không,
+214,CSDL Báo cáo - thống kê dùng chung,bc_luong_bao_cao,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+215,CSDL Báo cáo - thống kê dùng chung,bc_luong_bao_cao,Đơn vị gửi,don_vi_gui_id,Tham chiếu dm_don_vi,Số,,FK,Có,Không,,Không,,Không,
+216,CSDL Báo cáo - thống kê dùng chung,bc_luong_bao_cao,Đơn vị nhận,don_vi_nhan_id,Tham chiếu dm_don_vi,Số,,FK,Có,Không,,Không,,Không,
+217,CSDL Báo cáo - thống kê dùng chung,bc_luong_bao_cao,Lĩnh vực,linh_vuc,,Text,20,Không,Có,Không,benh_truyen_nhiem,Không,,Không,
+218,CSDL Báo cáo - thống kê dùng chung,bc_luong_bao_cao,Kỳ báo cáo,ky_bao_cao_id,Tham chiếu dm_ky_bao_cao,Số,,FK,Có,Không,,Không,,Không,
+219,CSDL Báo cáo - thống kê dùng chung,bc_luong_bao_cao,Hạn gửi,han_gui,Tính từ ngày kết thúc kỳ báo cáo + số ngày làm việc quy định,Ngày,,Không,Có,Không,,Không,,Không,
+220,CSDL Báo cáo - thống kê dùng chung,bc_luong_bao_cao,Ngày gửi thực tế,ngay_gui_thuc_te,,Ngày,,Không,Không,Không,,Không,,Không,
+221,CSDL Báo cáo - thống kê dùng chung,bc_luong_bao_cao,Trạng thái,trang_thai,,Text,20,Không,Có,Không,dung_han; tre_han; chua_gui,Không,,Không,
 ,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nguoi_dung,--- Bang: ht_nguoi_dung ---,,,,,,,,,,,,"Điều 3.3 TT15 (an toàn thông tin mạng, an ninh mạng, bảo vệ dữ liệu cá nhân)"
-215,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nguoi_dung,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-216,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nguoi_dung,Họ tên,ho_ten,,Text,200,Không,Có,Không,,Không,,Không,
-217,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nguoi_dung,Mã định danh (tài khoản),ma_dinh_danh,Tên đăng nhập/mã cán bộ,Text,50,Không,Có,Không,,Không,,Không,
-218,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nguoi_dung,Đơn vị công tác,don_vi_id,Tham chiếu dm_don_vi,Số,,FK,Có,Không,,Không,,Không,
+222,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nguoi_dung,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+223,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nguoi_dung,Họ tên,ho_ten,,Text,200,Không,Có,Không,,Không,,Không,
+224,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nguoi_dung,Mã định danh (tài khoản),ma_dinh_danh,Tên đăng nhập/mã cán bộ,Text,50,UQ,Có,Không,,Không,,Không,
+225,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nguoi_dung,Đơn vị công tác,don_vi_id,Tham chiếu dm_don_vi,Số,,FK,Có,Không,,Không,,Không,
 ,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_vai_tro,--- Bang: ht_vai_tro ---,,,,,,,,,,,,[Đề xuất kỹ thuật] Điều 3.3 TT15
-219,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_vai_tro,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-220,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_vai_tro,Tên vai trò,ten_vai_tro,"vd Nhân viên TYT xã, Cán bộ TTKSBT tỉnh, Cán bộ Viện, Cán bộ Cục Phòng bệnh, Quản trị hệ thống",Text,100,Không,Có,Không,,Không,,Không,
+226,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_vai_tro,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+227,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_vai_tro,Tên vai trò,ten_vai_tro,"vd Nhân viên TYT xã, Cán bộ TTKSBT tỉnh, Cán bộ Viện, Cán bộ Cục Phòng bệnh, Quản trị hệ thống",Text,100,Không,Có,Không,,Không,,Không,
 ,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_phan_quyen,--- Bang: ht_phan_quyen ---,,,,,,,,,,,,[Đề xuất kỹ thuật] Phạm vi dữ liệu giới hạn theo don_vi_id và cấp quản lý trong cây dm_don_vi
-221,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_phan_quyen,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-222,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_phan_quyen,Vai trò,vai_tro_id,Tham chiếu ht_vai_tro,Số,,FK,Có,Không,,Không,,Không,
-223,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_phan_quyen,Chức năng,chuc_nang,,Text,100,Không,Có,Không,,Không,,Không,
-224,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_phan_quyen,Mức độ,muc_do,,Text,10,Không,Có,Không,xem; nhap; sua; duyet; xuat,Không,,Không,
+228,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_phan_quyen,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+229,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_phan_quyen,Vai trò,vai_tro_id,Tham chiếu ht_vai_tro,Số,,FK,Có,Không,,Không,,Không,
+230,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_phan_quyen,Chức năng,chuc_nang,,Text,100,Không,Có,Không,,Không,,Không,
+231,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_phan_quyen,Mức độ,muc_do,,Text,10,Không,Có,Không,xem; nhap; sua; duyet; xuat,Không,,Không,
 ,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nhat_ky_truy_cap,--- Bang: ht_nhat_ky_truy_cap ---,,,,,,,,,,,,Điều 3.3 TT15 — audit log phục vụ yêu cầu an toàn/an ninh mạng và bảo vệ dữ liệu cá nhân
-225,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nhat_ky_truy_cap,Mã định danh,id,Khoá chính,Số,,PK,Có,Không,,Không,,Không,
-226,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nhat_ky_truy_cap,Người dùng,nguoi_dung_id,Tham chiếu ht_nguoi_dung,Số,,FK,Có,Không,,Không,,Không,
-227,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nhat_ky_truy_cap,Hành động,hanh_dong,,Text,50,Không,Có,Không,,Không,,Không,
-228,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nhat_ky_truy_cap,Đối tượng,doi_tuong,Bảng/bản ghi bị tác động,Text,100,Không,Có,Không,,Không,,Không,
-229,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nhat_ky_truy_cap,Thời gian,thoi_gian,,Ngày,,Không,Có,Không,,Không,,Không,
-230,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nhat_ky_truy_cap,Địa chỉ IP,dia_chi_ip,,Text,45,Không,Không,Không,,Có,Trung bình,Không,
+232,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nhat_ky_truy_cap,Khóa chính (kỹ thuật),id,"Khóa thay thế (surrogate) tự tăng, dùng nội bộ để liên kết khóa ngoại — KHÔNG phải mã định danh nghiệp vụ",Số,,PK,Có,Không,,Không,,Không,Chuẩn: id là surrogate key nội bộ; mã định danh nghiệp vụ dùng để chia sẻ dữ liệu là trường mã có nghĩa (xem dòng kế tiếp)
+233,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nhat_ky_truy_cap,Người dùng,nguoi_dung_id,Tham chiếu ht_nguoi_dung,Số,,FK,Có,Không,,Không,,Không,
+234,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nhat_ky_truy_cap,Hành động,hanh_dong,,Text,50,Không,Có,Không,,Không,,Không,
+235,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nhat_ky_truy_cap,Đối tượng,doi_tuong,Bảng/bản ghi bị tác động,Text,100,Không,Có,Không,,Không,,Không,
+236,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nhat_ky_truy_cap,Thời gian,thoi_gian,,Ngày,,Không,Có,Không,,Không,,Không,
+237,CSDL Quản trị hệ thống & an toàn dữ liệu,ht_nhat_ky_truy_cap,Địa chỉ IP,dia_chi_ip,,Text,45,Không,Không,Không,,Có,Trung bình,Không,
