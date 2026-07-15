@@ -8,12 +8,17 @@ Giao thuc: HTTP POST /rpc, body JSON {"op": ...}. Xem netclient.py o phia
 may tram (client) - noi bat chuoc lai giao dien sqlite3.Connection/Cursor
 toi thieu ma core.py can, de core.py + app.py khong phai sua logic doc/ghi.
 
+Cac op bat dau bang "admin_" (xem quan ly ket noi/whitelist IP ben duoi)
+chi duoc phep goi tu chinh may chu (localhost) - dung boi server_tray.py,
+KHONG phai danh cho may tram goi qua mang.
+
 CANH BAO BAO MAT: mac dinh KHONG yeu cau xac thuc (dung API key trong
 core.get_lan_api_key() de bat, tuy chon) - bat ky may nao trong cung mang
 LAN deu goi duoc RPC nay, bao gom ca cau lenh SQL tuy y ma tab "Truy vấn
 SQL" tren may tram gui len (da duoc gioi han o phia may tram la chi
 SELECT, nhung may chu khong tu kiem tra lai dieu do). Chi bat che do may
-chu trong mang noi bo tin cay.
+chu trong mang noi bo tin cay. Co the gioi han theo IP (whitelist) qua
+menu tray "Quản lý IP được phép kết nối" - xem core.load_acl_config().
 """
 import json
 import socket
@@ -26,6 +31,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import core
 
 SESSION_IDLE_TIMEOUT = 15 * 60  # giay - tu dong dong phien khong hoat dong
+LOCALHOST_IPS = ("127.0.0.1", "::1")
 
 _httpd = None
 _httpd_thread = None
@@ -45,6 +51,17 @@ def get_local_ip():
         return "127.0.0.1"
     finally:
         s.close()
+
+
+def _is_ip_allowed(ip):
+    """Localhost (chinh may chu) luon duoc phep, de tray khong bao gio tu
+    khoa minh. Cac IP khac chi bi gioi han khi che do "whitelist" duoc bat."""
+    if ip in LOCALHOST_IPS:
+        return True
+    cfg = core.load_acl_config()
+    if cfg.get("mode") != "whitelist":
+        return True
+    return ip in (cfg.get("allowed_ips") or [])
 
 
 def _new_connection():
@@ -100,6 +117,17 @@ class RpcHandler(BaseHTTPRequestHandler):
             self._send_json(400, {"error": "JSON không hợp lệ"})
             return
 
+        client_ip = self.client_address[0]
+        op = payload.get("op")
+        is_admin_op = isinstance(op, str) and op.startswith("admin_")
+        if is_admin_op:
+            if client_ip not in LOCALHOST_IPS:
+                self._send_json(403, {"error": "Chỉ quản trị được từ chính máy chủ (localhost)"})
+                return
+        elif not _is_ip_allowed(client_ip):
+            self._send_json(403, {"error": "Địa chỉ IP này không được phép kết nối tới máy chủ"})
+            return
+
         api_key = core.get_lan_api_key()
         if api_key and self.headers.get("X-Api-Key") != api_key:
             self._send_json(401, {"error": "Sai hoặc thiếu khóa API"})
@@ -125,13 +153,61 @@ class RpcHandler(BaseHTTPRequestHandler):
             path = core.backup_database(payload.get("reason", "tu_xa"), payload.get("keep", 10))
             return {"path": path}
 
+        if op == "admin_list_connections":
+            now = time.time()
+            with _sessions_lock:
+                connections = [
+                    {
+                        "session_id": sid,
+                        "ip": s["ip"],
+                        "connected_at": s["connected_at"],
+                        "idle_seconds": round(now - s["last_used"], 1),
+                    }
+                    for sid, s in _sessions.items()
+                ]
+            return {"connections": connections}
+
+        if op == "admin_disconnect":
+            sid = payload.get("session_id")
+            ip = payload.get("ip")
+            closed = 0
+            with _sessions_lock:
+                if sid:
+                    targets = [sid] if sid in _sessions else []
+                elif ip:
+                    targets = [k for k, s in _sessions.items() if s["ip"] == ip]
+                else:
+                    targets = []
+                for k in targets:
+                    try:
+                        _sessions[k]["conn"].close()
+                    except Exception:
+                        pass
+                    del _sessions[k]
+                    closed += 1
+            return {"ok": True, "closed": closed}
+
+        if op == "admin_get_acl":
+            return core.load_acl_config()
+
+        if op == "admin_set_acl":
+            mode = payload.get("mode", "allow_all")
+            if mode not in ("allow_all", "whitelist"):
+                raise sqlite3.Error(f"Chế độ không hợp lệ: {mode}")
+            allowed_ips = [str(ip).strip() for ip in (payload.get("allowed_ips") or []) if str(ip).strip()]
+            core.save_acl_config({"mode": mode, "allowed_ips": allowed_ips})
+            return {"ok": True}
+
         if op == "connect":
             sid = uuid.uuid4().hex
+            now = time.time()
             with _sessions_lock:
                 _sessions[sid] = {
                     "conn": _new_connection(),
                     "lock": threading.Lock(),
-                    "last_used": time.time(),
+                    "last_used": now,
+                    "connected_at": now,
+                    "ip": self.client_address[0],
                 }
             return {"session_id": sid}
 

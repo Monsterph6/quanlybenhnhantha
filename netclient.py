@@ -52,6 +52,41 @@ def request_backup(base_url, reason, keep, api_key=""):
     return result.get("path")
 
 
+# ------------------------------------------------------------------
+# Quan tri may chu (danh sach ket noi, ngat ket noi, whitelist IP) - chi
+# goi duoc tu chinh may chu (localhost), dung boi server_tray.py. Xem
+# kiem tra quyen tuong ung trong netserver.RpcHandler.do_POST.
+# ------------------------------------------------------------------
+
+def admin_list_connections(base_url, api_key=""):
+    """Tra ve danh sach cac phien dang ket noi toi may chu, moi phan tu la
+    dict {session_id, ip, connected_at, idle_seconds}."""
+    result = _post(base_url, api_key, {"op": "admin_list_connections"})
+    return result.get("connections") or []
+
+
+def admin_disconnect(base_url, api_key="", session_id=None, ip=None):
+    """Ngat 1 phien theo session_id, hoac toan bo cac phien tu 1 IP. Tra ve
+    so phien da ngat."""
+    payload = {"op": "admin_disconnect"}
+    if session_id:
+        payload["session_id"] = session_id
+    if ip:
+        payload["ip"] = ip
+    result = _post(base_url, api_key, payload)
+    return result.get("closed", 0)
+
+
+def admin_get_acl(base_url, api_key=""):
+    """Tra ve cau hinh kiem soat IP hien tai: {"mode": ..., "allowed_ips": [...]}."""
+    return _post(base_url, api_key, {"op": "admin_get_acl"})
+
+
+def admin_set_acl(base_url, api_key="", mode="allow_all", allowed_ips=None):
+    payload = {"op": "admin_set_acl", "mode": mode, "allowed_ips": allowed_ips or []}
+    return _post(base_url, api_key, payload)
+
+
 class RemoteRow:
     """Tuong duong sqlite3.Row: truy cap duoc theo ten cot hoac chi so, va
     lap qua cac GIA TRI theo thu tu cot (khong phai lap qua ten cot)."""
