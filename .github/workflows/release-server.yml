@@ -40,11 +40,17 @@ jobs:
         run: |
           Compress-Archive -Path dist_server\* -DestinationPath QuanLyBenhNhanTHA-Server-${{ github.ref_name }}.zip
 
+      - name: Build installer (Setup.exe) voi Inno Setup
+        run: |
+          $version = "${{ github.ref_name }}" -replace '^server-v', ''
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" /DMyAppVersion=$version setup_server.iss
+
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release create ${{ github.ref_name }} `
             "QuanLyBenhNhanTHA-Server-${{ github.ref_name }}.zip" `
+            "setup_output\QuanLyBenhNhanTHA-Server-Setup-*.exe" `
             --title "QuanLyBenhNhanTHA Server ${{ github.ref_name }}" `
-            --notes "Ban cap nhat goi MAY CHU (Windows Service + tray helper) duoc build tu dong tu commit ${{ github.sha }}. Day la dong phien ban RIENG voi ung dung may tram (tag 'v*.*.*').`n`nGiai nen ra 1 thu muc co dinh roi:`n- Lan dau: chuot phai install_server.bat, chon 'Run as administrator'.`n- Cap nhat lan sau: chuot phai update_server.bat, chon 'Run as administrator'."
+            --notes "Ban cap nhat goi MAY CHU (Windows Service + tray helper) duoc build tu dong tu commit ${{ github.sha }}. Day la dong phien ban RIENG voi ung dung may tram (tag 'v*.*.*').`n`n- **QuanLyBenhNhanTHA-Server-Setup-*.exe**: file cai dat (dung Inno Setup, tu hoi cong LAN va tu cai/bat Windows Service, can quyen Administrator) - dung cho lan dau tien tren may moi (khuyen nghi).`n- **QuanLyBenhNhanTHA-Server-*.zip**: ban portable, dung lam nguon cho update_server.bat tu tai khi co ban moi, hoac cai thu cong qua install_server.bat."
