@@ -127,7 +127,7 @@ Việc gộp/xóa hàng loạt đều tự động sao lưu CSDL trước khi th
 
 **Trình tạo câu lệnh SQL (không cần biết cú pháp):** bấm vào ô có dấu tích ở
 đầu để mở rộng. Chọn các cột muốn hiển thị, thêm điều kiện lọc (chọn trường —
-toan tử như "bằng", "chứa", "lớn hơn", "để trống"... — nhập giá trị), tùy chọn
+toán tử như "bằng", "chứa", "lớn hơn", "để trống"... — nhập giá trị), tùy chọn
 nhóm theo 1 cột (tự thêm đếm số lượng), sắp xếp và giới hạn số dòng, rồi bấm
 **Tạo câu lệnh SQL** — câu lệnh sinh ra sẽ tự động điền vào khung soạn thảo bên
 dưới và chạy luôn, có thể chỉnh sửa lại nếu cần trước khi chạy lại.
@@ -153,7 +153,7 @@ Vẽ biểu đồ trực quan (dùng PyQt6-Charts) trên dữ liệu hiện có 
 qua ô "Loại thống kê":
 - **Giới tính** — biểu đồ tròn.
 - **Nhóm bệnh (KLN)** — biểu đồ cột, đếm theo TỪNG nhóm bệnh riêng lẻ (Tăng
-  huyết áp, Đái tháo đường, COPD/Hen phế quản, Ung thư, Khác) — 1 bệnh nhân
+  huyết áp, Đái tháo đường, COPD/Hen phế quản, Ung thư, Tâm thần, Khác) — 1 bệnh nhân
   mắc nhiều bệnh cùng lúc được tính vào tất cả các nhóm liên quan, không chỉ
   1 nhóm duy nhất. Xem mục "Phân loại Nhóm bệnh không lây nhiễm" bên dưới.
 - **Tỉnh/Thành phố**, **Phường/Xã** (top 20), **Chẩn đoán** (top 15) — biểu đồ
@@ -180,10 +180,10 @@ ra từ đó, dùng để lọc/thống kê theo từng loại bệnh.
 
 - Khi nhập Excel, mỗi dòng được tự động dò từ khóa trong Chẩn đoán để gán vào
   1 hoặc nhiều nhóm: **Tăng huyết áp**, **Đái tháo đường**, **COPD / Hen phế
-  quản**, **Ung thư** — hoặc **Khác** nếu Chẩn đoán có nội dung nhưng không
-  khớp nhóm nào. 1 bệnh nhân có thể thuộc nhiều nhóm cùng lúc (vd "Tăng huyết
-  áp, Đái tháo đường") — thực tế nhiều người mắc đồng thời nhiều bệnh không
-  lây nhiễm.
+  quản**, **Ung thư**, **Tâm thần** — hoặc **Khác** nếu Chẩn đoán có nội dung
+  nhưng không khớp nhóm nào. 1 bệnh nhân có thể thuộc nhiều nhóm cùng lúc (vd
+  "Tăng huyết áp, Đái tháo đường") — thực tế nhiều người mắc đồng thời nhiều
+  bệnh không lây nhiễm.
 - **Đây chỉ là dò từ khóa đơn giản, KHÔNG phải chẩn đoán y khoa chính thức** —
   cần xem lại và có thể sửa tay trực tiếp cột "Nhóm bệnh (KLN)" ở tab "Danh
   sách" (qua tab "Truy vấn SQL" chạy `UPDATE` hoặc mở rộng tính năng sửa trực
@@ -193,8 +193,8 @@ ra từ đó, dùng để lọc/thống kê theo từng loại bệnh.
   dùng nút **Xác định lại Nhóm bệnh (KLN)** ở tab "Nhập dữ liệu" để gán bù,
   không ghi đè các dòng đã có/đã sửa tay.
 - Danh mục nhóm bệnh hiện quản lý được định nghĩa trong `core.py` (biến
-  `DISEASE_CATEGORIES`) — muốn thêm nhóm bệnh mới (ví dụ Tâm thần, Bệnh thận
-  mạn...) thì sửa trực tiếp danh sách này (mã, nhãn hiển thị, danh sách từ
+  `DISEASE_CATEGORIES`) — muốn thêm nhóm bệnh mới (ví dụ Bệnh thận mạn, Tim
+  mạch...) thì sửa trực tiếp danh sách này (mã, nhãn hiển thị, danh sách từ
   khóa không dấu) rồi chạy lại "Xác định lại Nhóm bệnh (KLN)".
 
 ### 6. Tab "Mạng LAN"
