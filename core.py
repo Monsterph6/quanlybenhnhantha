@@ -82,6 +82,9 @@ DISEASE_CATEGORIES = [
     ("UNGTHU", "Ung thư", [
         "ung thu",
     ]),
+    ("TAMTHAN", "Tâm thần", [
+        "tam than", "tram cam", "roi loan lo au",
+    ]),
 ]
 DISEASE_OTHER_LABEL = "Khác"
 
